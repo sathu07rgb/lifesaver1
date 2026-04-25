@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bleeding Emergency - LifeSaver AI</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
   <div class="site-shell">
     <header class="topbar">
@@ -28,6 +32,9 @@
     </header>
 
     <main>
+      <div style="margin-bottom: 1.5rem; padding: 0 1rem;">
+        <a href="emergency.html" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); color: #fff; text-decoration: none; font-size: 1.2rem; transition: background 0.2s, transform 0.2s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'; this.style.transform='translateX(-2px)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.05)'; this.style.transform='translateX(0)'">←</a>
+      </div>
       <section class="section-block">
         <div class="section-header">
           <span class="section-label">Bleeding Emergency</span>
@@ -48,13 +55,17 @@
               </div>
             </div>
 
-            <div class="camera-controls">
-              <button class="btn btn-primary" id="captureBtn" onclick="capturePhoto()" disabled>
+            <div class="camera-controls" style="display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center;">
+              <button class="btn btn-primary" id="captureBtn" onclick="capturePhoto()" disabled style="flex: 1; min-width: 140px;">
                 📸 Take Photo
               </button>
-              <button class="btn btn-secondary" onclick="switchCamera()">
+              <button class="btn btn-secondary" onclick="switchCamera()" style="flex: 1; min-width: 140px;">
                 🔄 Switch Camera
               </button>
+              <button class="btn btn-secondary" onclick="document.getElementById('fileInput').click()" style="flex: 1; min-width: 140px;">
+                📁 Upload Photo
+              </button>
+              <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
             </div>
           </div>
 
@@ -70,20 +81,31 @@
           </div>
         </div>
 
-        <!-- File Upload Alternative -->
-        <div class="upload-section">
-          <h3>Or Upload Existing Photos</h3>
-          <div class="upload-area" id="uploadArea">
-            <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
-            <div class="upload-placeholder">
-              <span>📁</span>
-              <p>Click to select photos or drag and drop</p>
-              <button class="btn btn-secondary" onclick="document.getElementById('fileInput').click()">
-                Choose Files
-              </button>
-            </div>
+        <!-- AI Analyse Button + Result -->
+        <div class="ai-analyse-wrapper" id="aiAnalyseWrapper">
+          <button class="btn btn-analyse" id="analyseBtn" onclick="analyseWound()">
+            <span class="analyse-icon">🔬</span>
+            <span>Analyse Wound with AI</span>
+            <span class="analyse-badge">AI</span>
+          </button>
+          <p class="analyse-hint" id="analyseHint">Upload a photo above, or describe the wound in the text box below.
+          </p>
+
+          <!-- Text Description Box -->
+          <div class="wound-text-box">
+            <label class="wound-text-label" for="woundText">💬 Describe the wound (optional)</label>
+            <textarea id="woundText" class="wound-textarea"
+              placeholder="e.g. deep cut on the arm with heavy bleeding... or small scratch on finger..."
+              rows="3"></textarea>
+            <button class="btn btn-text-analyse" id="textAnalyseBtn" onclick="analyseText()">
+              <span>🩺 Analyse Description</span>
+            </button>
           </div>
+
+          <!-- Result card renders here -->
+          <div id="result"></div>
         </div>
+
 
         <!-- First Aid Steps -->
         <div class="first-aid-section">
@@ -138,6 +160,225 @@
 
   <script src="script.js"></script>
   <script>
+    // ─── Built-in first-aid fallback data (used when API quota is exceeded) ─────
+    const FALLBACK_DATA = {
+      bleeding: {
+        type: 'bleeding', severity: 'moderate', callEmergency: true,
+        description: 'A bleeding wound has been detected. There is visible blood loss from the affected area. Act quickly to control the bleeding and prevent infection.',
+        steps: [
+          'Apply firm, direct pressure on the wound using a clean cloth or bandage immediately.',
+          'Do NOT remove the cloth if it soaks through — layer more material on top and keep pressing.',
+          'Elevate the injured limb above heart level to slow blood flow if possible.',
+          'Keep the person calm and still. If they feel faint, lay them down and raise their legs.',
+          'If bleeding does not stop within 10 minutes or is severe, call 108 immediately.'
+        ]
+      },
+      burn: {
+        type: 'burn', severity: 'moderate', callEmergency: false,
+        description: 'A burn injury has been detected on the skin. The affected area shows signs of heat damage. Immediate cooling is the most critical first step.',
+        steps: [
+          'Cool the burn under cool (not cold or icy) running water for 10–20 minutes right away.',
+          'Do NOT use ice, butter, toothpaste, or any home remedies — these worsen the damage.',
+          'Remove any jewellery or tight items near the burn before swelling begins.',
+          'Cover the burn loosely with a sterile, non-fluffy bandage or cling film.',
+          'For burns larger than your hand, or on face/hands/joints — call 108 immediately.'
+        ]
+      },
+      cut: {
+        type: 'cut', severity: 'mild', callEmergency: false,
+        description: 'A cut or laceration is visible on the skin. The wound edges may be open. Proper cleaning and covering will prevent infection.',
+        steps: [
+          'Rinse the cut gently under clean running water for at least 5 minutes to remove dirt.',
+          'Apply gentle pressure with a clean cloth to stop any bleeding.',
+          'Apply an antiseptic cream or solution if available.',
+          'Cover with a sterile bandage or plaster.',
+          'Seek medical help if the cut is deep, wide, or bleeding does not stop within 15 minutes.'
+        ]
+      },
+      default: {
+        type: 'unknown', severity: 'moderate', callEmergency: false,
+        description: 'A wound has been detected. Without AI analysis, standard first-aid guidelines are shown below. Please assess the wound carefully.',
+        steps: [
+          'Keep the person calm and still. Reassure them that help is coming.',
+          'Apply firm pressure to any bleeding area using a clean cloth.',
+          'Clean the wound gently with clean water to remove visible dirt.',
+          'Cover with a clean bandage or cloth to prevent infection.',
+          'Call 108 immediately if: bleeding is heavy, the person is unconscious, or wound is deep.'
+        ]
+      }
+    };
+
+    // ─── Wound Analysis Logic (fully offline — no API, no backend) ──────────────
+    let latestImageBlob = null;
+    let latestFileName = '';   // stores the uploaded file name for demo detection
+
+    // ── Photo Analyse: filename-based detection → render into #result ──
+    function analyseWound() {
+      const btn = document.getElementById('analyseBtn');
+      const hint = document.getElementById('analyseHint');
+      const resultDiv = document.getElementById('result');
+
+      if (!latestImageBlob) {
+        hint.textContent = '⚠️ Please capture or upload a photo first, or describe the wound in the text box.';
+        hint.style.color = 'var(--accent)';
+        return;
+      }
+
+      // Loading state
+      btn.disabled = true;
+      btn.classList.add('loading');
+      btn.querySelector('span').textContent = 'Analysing...';
+      resultDiv.innerHTML = '';
+      hint.textContent = '⏳ Scanning image: ' + (latestFileName || 'image') + '...';
+      hint.style.color = '#a3b4ff';
+
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        btn.querySelector('span').textContent = 'Analyse Wound with AI';
+
+        // ── Demo AI: detect wound type from file name ──
+        const name = latestFileName.toLowerCase();
+        let type;
+
+        if (name.includes('minor') || name.includes('small') || name.includes('light') || name.includes('scratch')) {
+          type = 'minor';   // 🟢 Minor bleeding
+        } else if (name.includes('major') || name.includes('deep') || name.includes('severe') || name.includes('heavy')) {
+          type = 'major';   // 🔴 Severe / deep wound
+        } else {
+          // Default: treat unknown filenames as major for safety
+          type = 'major';
+        }
+
+        renderResult(type, resultDiv, hint);
+      }, 1500);
+    }
+
+    // ── Text Analyse: read textarea → detect deep or minor ──
+    function analyseText() {
+      const textBtn = document.getElementById('textAnalyseBtn');
+      const text = (document.getElementById('woundText').value || '').toLowerCase().trim();
+      const hint = document.getElementById('analyseHint');
+      const resultDiv = document.getElementById('result');
+
+      if (!text) {
+        hint.textContent = '⚠️ Please type a wound description first.';
+        hint.style.color = 'var(--accent)';
+        return;
+      }
+
+      textBtn.disabled = true;
+      textBtn.querySelector('span').textContent = '⏳ Analysing...';
+      resultDiv.innerHTML = '';
+
+      setTimeout(() => {
+        textBtn.disabled = false;
+        textBtn.querySelector('span').textContent = '🩺 Analyse Description';
+
+        const deepKeywords = ['deep', 'severe', 'heavy', 'major', 'profuse', 'gushing', 'large', 'wide', 'serious', 'bad', 'stuck', 'embedded', 'artery', 'vein', 'bone', 'unconscious', 'faint', 'won\'t stop', 'cant stop'];
+        const minorKeywords = ['minor', 'small', 'little', 'scratch', 'tiny', 'surface', 'superficial', 'light', 'slow', 'stopped', 'slight', 'graze', 'scrape'];
+
+        const isDeep = deepKeywords.some(kw => text.includes(kw));
+        const isMinor = minorKeywords.some(kw => text.includes(kw));
+        const type = isDeep ? 'major' : (isMinor ? 'minor' : 'major');
+
+        renderResult(type, resultDiv, hint);
+      }, 1000);
+    }
+
+    // ── renderResult — builds the result card into #result div ──
+    function renderResult(type, resultDiv, hint) {
+      const isMinor = (type === 'minor');
+
+      if (isMinor) {
+        // 🟢 Minor bleeding
+        hint.textContent = '🟢 Minor bleeding detected — follow care steps below.';
+        hint.style.color = '#4ade80';
+
+        resultDiv.innerHTML = `
+          <div class="res-card res-minor">
+            <div class="res-header">
+              <span class="res-icon">🟢</span>
+              <div>
+                <h3 class="res-title">Minor Bleeding Detected</h3>
+                <span class="res-badge res-badge-minor">MINOR</span>
+              </div>
+            </div>
+            <p class="res-desc">The wound appears to be a minor surface bleed. With proper cleaning and dressing it should heal well at home.</p>
+            <div class="res-steps-wrap">
+              <h4 class="res-steps-title">📋 What to do</h4>
+              <ol class="res-steps">
+                <li>Clean the wound gently under running water for 3–5 minutes</li>
+                <li>Apply light pressure using a clean cloth to stop bleeding</li>
+                <li>Apply antiseptic cream or solution to prevent infection</li>
+                <li>Cover with a sterile bandage or plaster</li>
+                <li>Monitor — if bleeding restarts or worsens, seek medical help</li>
+              </ol>
+            </div>
+          </div>
+        `;
+
+      } else {
+        // 🔴 Severe / deep wound
+        hint.textContent = '🚨 Severe wound — call 108 immediately!';
+        hint.style.color = '#ef4444';
+
+        resultDiv.innerHTML = `
+          <div class="res-card res-major">
+            <div class="res-header">
+              <span class="res-icon">🔴</span>
+              <div>
+                <h3 class="res-title">Severe Bleeding Detected</h3>
+                <span class="res-badge res-badge-major">SEVERE</span>
+              </div>
+            </div>
+
+            <!-- Call 108 FIRST -->
+            <div class="res-emergency">
+              <div class="res-em-pulse"></div>
+              <div class="res-em-text">
+                <strong>🚨 Call Ambulance Immediately</strong>
+                <span>Do not wait — call now while applying pressure</span>
+              </div>
+              <a href="tel:108" class="res-call-btn">📞 108</a>
+            </div>
+
+            <p class="res-desc">This appears to be a deep or severe wound. Call 108 immediately and follow these steps while waiting for help.</p>
+            <div class="res-steps-wrap">
+              <h4 class="res-steps-title">📋 Emergency Procedure</h4>
+              <ol class="res-steps">
+                <li>Apply firm, continuous pressure using a clean cloth or bandage immediately</li>
+                <li>Do NOT remove objects stuck in the wound — stabilise them in place</li>
+                <li>Keep applying pressure without lifting — do not check the wound</li>
+                <li>Elevate the injured area above heart level if it is a limb</li>
+                <li>Keep the patient calm, warm and still until emergency help arrives</li>
+              </ol>
+            </div>
+          </div>
+        `;
+      }
+
+      // Animate in
+      resultDiv.style.opacity = '0';
+      resultDiv.style.transform = 'translateY(16px)';
+      resultDiv.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+      setTimeout(() => {
+        resultDiv.style.opacity = '1';
+        resultDiv.style.transform = 'translateY(0)';
+      }, 30);
+    }
+
+
+    function blobToBase64(blob) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    // ─── Camera ──────────────────────────────────────────────────────────────────
     let stream = null;
     let currentFacingMode = 'environment'; // Back camera by default
 
@@ -171,17 +412,16 @@
       const canvas = document.getElementById('canvas');
       const context = canvas.getContext('2d');
 
-      // Set canvas size to video size
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
-
-      // Draw video frame to canvas
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-      // Convert to blob and create image element
       canvas.toBlob(blob => {
+        latestImageBlob = blob;
+        latestFileName = 'captured_photo.jpg'; // camera photos default to major
         const photoUrl = URL.createObjectURL(blob);
         addPhotoToGallery(photoUrl, blob);
+        updateAnalyseHint();
       });
     }
 
@@ -241,10 +481,19 @@
       const files = event.target.files;
       for (let file of files) {
         if (file.type.startsWith('image/')) {
+          latestImageBlob = file;
+          latestFileName = file.name;  // 🔑 used for demo AI detection
           const photoUrl = URL.createObjectURL(file);
           addPhotoToGallery(photoUrl, file);
+          updateAnalyseHint();
         }
       }
+    }
+
+    function updateAnalyseHint() {
+      const hint = document.getElementById('analyseHint');
+      hint.textContent = '📸 Photo ready! Tap "Analyse Wound with AI" to get instant AI guidance.';
+      hint.style.color = '#a3b4ff';
     }
 
     // Drag and drop functionality
@@ -266,8 +515,11 @@
       const files = e.dataTransfer.files;
       for (let file of files) {
         if (file.type.startsWith('image/')) {
+          latestImageBlob = file;
+          latestFileName = file.name;  // 🔑 used for demo AI detection
           const photoUrl = URL.createObjectURL(file);
           addPhotoToGallery(photoUrl, file);
+          updateAnalyseHint();
         }
       }
     });
@@ -289,4 +541,5 @@
     });
   </script>
 </body>
+
 </html>

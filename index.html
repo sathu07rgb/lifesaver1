@@ -1,14 +1,18 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LifeSaver AI</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
   <div class="site-shell">
     <header class="topbar" id="home">
@@ -41,9 +45,12 @@
             Whether it's bleeding, choking, burns, or an urgent accident, LifeSaver AI has your back.
           </p>
           <div class="hero-actions">
-            <button class="btn btn-emergency hero-btn" type="button" onclick="window.open('emergency.html', '_blank')" id="heroEmergencyBtn">Emergency Response</button>
-            <button class="btn btn-sos hero-btn" type="button" onclick="openSosModal()" id="heroSosBtn">🔴 Emergency SOS</button>
-            <button class="btn btn-secondary hero-btn" type="button" onclick="findHospitals()" id="heroHospitalBtn">📍 Find Nearby Hospitals</button>
+            <button class="btn btn-emergency hero-btn" type="button" onclick="window.open('emergency.html', '_blank')"
+              id="heroEmergencyBtn">Emergency Response</button>
+            <button class="btn btn-sos hero-btn" type="button" onclick="openSosModal()" id="heroSosBtn">🔴 Emergency
+              SOS</button>
+            <button class="btn btn-secondary hero-btn" type="button" onclick="findHospitals()" id="heroHospitalBtn">📍
+              Find Nearby Hospitals</button>
           </div>
         </div>
       </section>
@@ -54,19 +61,22 @@
             <span class="mini-icon">📞</span>
             <h3 id="ambulanceTitle">Ambulance</h3>
             <p>108</p>
-            <button class="btn btn-small" type="button" onclick="callService('ambulanceTitle', '108')" id="ambulanceBtn">Call</button>
+            <button class="btn btn-small" type="button" onclick="callService('ambulanceTitle', '108')"
+              id="ambulanceBtn">Call</button>
           </div>
           <div class="mini-card police-card">
             <span class="mini-icon">🚓</span>
             <h3 id="policeTitle">Police</h3>
             <p>100</p>
-            <button class="btn btn-small" type="button" onclick="callService('policeTitle', '100')" id="policeBtn">Call</button>
+            <button class="btn btn-small" type="button" onclick="callService('policeTitle', '100')"
+              id="policeBtn">Call</button>
           </div>
           <div class="mini-card fire-card">
             <span class="mini-icon">🚒</span>
             <h3 id="fireTitle">Fire Dept</h3>
             <p>101</p>
-            <button class="btn btn-small" type="button" onclick="callService('fireTitle', '101')" id="fireBtn">Call</button>
+            <button class="btn btn-small" type="button" onclick="callService('fireTitle', '101')"
+              id="fireBtn">Call</button>
           </div>
         </div>
       </section>
@@ -90,4 +100,5 @@
   <div class="toast" id="toast"></div>
   <script src="script.js"></script>
 </body>
+
 </html>

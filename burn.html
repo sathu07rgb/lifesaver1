@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Burn Emergency - LifeSaver AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── Page-specific styles ── */
+    .burn-hero {
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.15) 0%, rgba(239, 68, 68, 0.10) 100%);
+      border: 1px solid rgba(249, 115, 22, 0.25);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .burn-hero-icon {
+      font-size: 3rem;
+      flex-shrink: 0;
+      animation: flicker-icon 2s ease-in-out infinite;
+    }
+
+    @keyframes flicker-icon {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    .burn-hero h2 {
+      margin: 0 0 0.35rem;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 1px;
+      color: #f8fafc;
+    }
+
+    .burn-hero p {
+      margin: 0;
+      color: #94a3b8;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* ── Analyzing state ── */
+    .analyzing-state {
+      text-align: center;
+      padding: 2rem;
+      color: #94a3b8;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2.5px solid rgba(249, 115, 22, 0.25);
+      border-top-color: #f97316;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ── Result cards ── */
+    #result { margin-top: 1.5rem; }
+
+    .res-card {
+      border-radius: 14px;
+      padding: 1.5rem;
+      overflow: hidden;
+    }
+
+    .res-card.res-danger {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1.5px solid rgba(239, 68, 68, 0.35);
+    }
+
+    .res-card.res-safe {
+      background: rgba(34, 197, 94, 0.08);
+      border: 1.5px solid rgba(34, 197, 94, 0.35);
+    }
+
+    .res-card.res-unclear {
+      background: rgba(251, 191, 36, 0.08);
+      border: 1.5px solid rgba(251, 191, 36, 0.35);
+    }
+
+    .res-header {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      margin-bottom: 1rem;
+    }
+
+    .res-icon { font-size: 2rem; flex-shrink: 0; }
+
+    .res-title {
+      margin: 0 0 0.3rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #f1f5f9;
+    }
+
+    .res-badge {
+      display: inline-block;
+      padding: 0.2rem 0.65rem;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+
+    .res-badge-danger { background: rgba(239,68,68,0.25); color: #fca5a5; }
+    .res-badge-safe { background: rgba(34,197,94,0.25); color: #86efac; }
+    .res-badge-unclear { background: rgba(251,191,36,0.25); color: #fde68a; }
+
+    .res-emergency {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      background: rgba(239,68,68,0.12);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+      margin: 1rem 0;
+    }
+
+    .res-em-pulse {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ef4444;
+      flex-shrink: 0;
+      animation: em-pulse 1.2s ease-in-out infinite;
+    }
+
+    @keyframes em-pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.4); }
+    }
+
+    .res-em-text {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .res-em-text strong { color: #fca5a5; font-size: 0.95rem; }
+    .res-em-text span { color: #94a3b8; font-size: 0.82rem; }
+
+    .res-call-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      background: #ef4444;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.15s;
+      flex-shrink: 0;
+    }
+
+    .res-call-btn:hover { background: #dc2626; }
+
+    .res-desc {
+      color: #94a3b8;
+      font-size: 0.92rem;
+      line-height: 1.65;
+      margin: 0 0 1rem;
+    }
+
+    .res-steps-wrap h4 {
+      margin: 0 0 0.65rem;
+      color: #e2e8f0;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="site-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">🚨</div>
+        <div>
+          <span class="brand-name">LifeSaver AI</span>
+          <span class="brand-tag">Emergency care dashboard</span>
+        </div>
+      </div>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="emergency.html">Emergency Response</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <button class="btn btn-sos-nav" type="button" onclick="openSosModal()">SOS Call</button>
+    </header>
+
+    <main>
+      <div style="margin-bottom: 1.5rem; padding: 0 1rem;">
+        <a href="emergency.html" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); color: #fff; text-decoration: none; font-size: 1.2rem; transition: background 0.2s, transform 0.2s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'; this.style.transform='translateX(-2px)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.05)'; this.style.transform='translateX(0)'">←</a>
+      </div>
+      <section class="section-block">
+        <div class="section-header">
+          <span class="section-label">Burn Emergency</span>
+          <h2>Burn Emergency Analysis</h2>
+          <p>Document the injury with photos and get AI-guided first aid steps.</p>
+        </div>
+
+        <!-- Hero banner -->
+        <div class="burn-hero">
+          <div class="burn-hero-icon">🔥</div>
+          <div>
+            <h2>Immediate Burn Care</h2>
+            <p>Upload a photo of the burn. Our simulated AI will analyze the severity and provide the correct immediate response.</p>
+          </div>
+        </div>
+
+        <!-- Camera and Photo Upload Section -->
+        <div class="camera-section">
+          <div class="camera-container">
+            <div class="camera-preview">
+              <video id="camera" autoplay playsinline></video>
+              <canvas id="canvas" style="display: none;"></canvas>
+              <div class="camera-placeholder" id="cameraPlaceholder">
+                <div class="camera-icon">📷</div>
+                <p>Camera access needed to document the burn</p>
+                <button class="btn btn-primary" onclick="startCamera()">Enable Camera</button>
+              </div>
+            </div>
+
+            <div class="camera-controls" style="display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center;">
+              <button class="btn btn-primary" id="captureBtn" onclick="capturePhoto()" disabled style="flex: 1; min-width: 140px;">
+                📸 Take Photo
+              </button>
+              <button class="btn btn-secondary" onclick="switchCamera()" style="flex: 1; min-width: 140px;">
+                🔄 Switch Camera
+              </button>
+              <button class="btn btn-secondary" onclick="document.getElementById('fileInput').click()" style="flex: 1; min-width: 140px;">
+                📁 Upload Photo
+              </button>
+              <input type="file" id="fileInput" accept="image/*" onchange="previewImage(event)" style="display: none;">
+            </div>
+          </div>
+
+          <!-- Photo Gallery & Analysis -->
+          <div class="photo-gallery">
+            <h3>Uploaded Image</h3>
+            <div id="photoGrid" class="photo-grid">
+              <div class="photo-placeholder" id="photoPlaceholder">
+                <span>📷</span>
+                <p>No photos uploaded yet</p>
+              </div>
+            </div>
+
+
+            <button class="btn btn-analyse" id="analyseBtn" onclick="analyzeBurn()" style="width: 100%; margin-top: 1rem;">
+              <span class="analyse-icon">🔬</span>
+              <span id="btnText">Analyze Burn</span>
+              <span class="analyse-badge">AI</span>
+            </button>
+            <p class="analyse-hint" id="analyseHint" style="margin-top: 0.5rem;">Upload a photo to begin analysis.</p>
+          </div>
+        </div>
+
+        <!-- Result container -->
+        <div id="result"></div>
+
+        <!-- First Aid Quick Reference -->
+        <div class="first-aid-section">
+          <h3>⚡ Universal Burn First Aid (Before Analysis)</h3>
+          <div class="step-list">
+            <div class="step-item">
+              <span class="step-number">1</span>
+              <span><strong>Stop the burning process:</strong> Remove the person from the source of the burn.</span>
+            </div>
+            <div class="step-item">
+              <span class="step-number">2</span>
+              <span><strong>Cool the burn:</strong> Run cool (not cold) water over the burn for at least 10–20 minutes.</span>
+            </div>
+            <div class="step-item">
+              <span class="step-number">3</span>
+              <span><strong>Remove tight items:</strong> Remove rings or tight clothing before swelling occurs.</span>
+            </div>
+            <div class="step-item">
+              <span class="step-number">4</span>
+              <span><strong>Do NOT:</strong> Do not apply ice, butter, toothpaste, or ointments.</span>
+            </div>
+            <div class="step-item">
+              <span class="step-number">5</span>
+              <span><strong>Call 108 if:</strong> The burn is large, deep, on the face/hands/groin, or caused by chemicals/electricity.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- SOS Modal -->
+  <div class="modal-overlay" id="sosModal">
+    <div class="modal">
+      <div class="modal-title">🚨 SOS Activated</div>
+      <p class="modal-body">
+        This will alert <strong>all emergency services</strong> to your location.
+        Only proceed in a real emergency.
+      </p>
+      <div class="modal-actions">
+        <button class="modal-btn cancel" onclick="closeSosModal()">Cancel</button>
+        <button class="modal-btn confirm" onclick="window.location.href='tel:112'">SEND SOS</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    let latestImageBlob = null;
+    let latestFileName = '';
+
+    // ── Image Preview Logic ──
+    function previewImage(event) {
+      const file = event.target.files[0];
+      if (file && file.type.startsWith('image/')) {
+        latestImageBlob = file;
+        latestFileName = file.name;
+        const photoUrl = URL.createObjectURL(file);
+        addPhotoToGallery(photoUrl);
+        updateAnalyseHint();
+      }
+    }
+
+    function addPhotoToGallery(photoUrl) {
+      const photoGrid = document.getElementById('photoGrid');
+      const placeholder = document.getElementById('photoPlaceholder');
+      if (placeholder) placeholder.style.display = 'none';
+
+      // Clear existing photos for single analysis
+      const existingItems = photoGrid.querySelectorAll('.photo-item');
+      existingItems.forEach(item => item.remove());
+
+      const photoItem = document.createElement('div');
+      photoItem.className = 'photo-item';
+
+      const img = document.createElement('img');
+      img.src = photoUrl;
+      img.alt = 'Uploaded burn photo';
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'delete-photo';
+      deleteBtn.innerHTML = '🗑️';
+      deleteBtn.onclick = () => {
+        photoItem.remove();
+        URL.revokeObjectURL(photoUrl);
+        latestImageBlob = null;
+        latestFileName = '';
+        if (placeholder) placeholder.style.display = 'flex';
+        document.getElementById('analyseHint').textContent = 'Upload a photo to begin analysis.';
+        document.getElementById('analyseHint').style.color = 'var(--text-muted)';
+        document.getElementById('result').innerHTML = '';
+      };
+
+      photoItem.appendChild(img);
+      photoItem.appendChild(deleteBtn);
+      photoGrid.appendChild(photoItem);
+    }
+
+    function updateAnalyseHint() {
+      const hint = document.getElementById('analyseHint');
+      hint.textContent = '📸 Photo ready! Tap "Analyze Burn" to get instant AI guidance.';
+      hint.style.color = '#f97316';
+    }
+
+    // ── Main analysis function ──
+    function analyzeBurn() {
+      const btn = document.getElementById('analyseBtn');
+      const btnText = document.getElementById('btnText');
+      const hint = document.getElementById('analyseHint');
+      const resultDiv = document.getElementById('result');
+
+      if (!latestImageBlob) {
+        hint.textContent = '⚠️ Please upload or capture a photo of the burn first.';
+        hint.style.color = '#ef4444';
+        return;
+      }
+
+      // Loading state
+      btn.disabled = true;
+      btn.classList.add('loading');
+      btnText.textContent = 'Analyzing...';
+      resultDiv.innerHTML = `
+        <div class="analyzing-state">
+          <div class="spinner"></div>
+          <span>Analyzing burn severity...</span>
+        </div>`;
+      
+      resultDiv.style.opacity = '1';
+      resultDiv.style.transform = 'translateY(0)';
+
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        btnText.textContent = 'Analyze Burn';
+        
+        // Simulated AI Logic
+        const name = latestFileName.toLowerCase();
+        let severity;
+
+        if (name.includes('minor') || name.includes('small') || name.includes('light')) {
+          severity = 'mild';
+        } else if (name.includes('severe') || name.includes('major') || name.includes('deep') || name.includes('bad')) {
+          severity = 'severe';
+        } else {
+          // Default: treat unknown filenames as severe for safety
+          severity = 'severe';
+        }
+
+        renderResult(severity, resultDiv, hint);
+      }, 1500);
+    }
+
+    function renderResult(severity, resultDiv, hint) {
+      if (severity === 'mild') {
+        hint.textContent = '🟢 Mild burn detected — follow care steps below.';
+        hint.style.color = '#22c55e';
+
+        resultDiv.innerHTML = `
+          <div class="res-card res-safe">
+            <div class="res-header">
+              <span class="res-icon">🟢</span>
+              <div>
+                <h3 class="res-title">Mild Burn Detected</h3>
+                <span class="res-badge res-badge-safe">MINOR</span>
+              </div>
+            </div>
+
+            <p class="res-desc">The burn appears to be superficial (first-degree). It can likely be treated safely at home with proper care.</p>
+
+            <div class="res-steps-wrap">
+              <h4 class="res-steps-title">📋 Care Steps</h4>
+              <ol class="res-steps">
+                <li><span><strong>Cool under running water:</strong> Hold the burned area under cool (not cold) running water for 10–20 minutes.</span></li>
+                <li><span><strong>Remove tight items:</strong> Carefully remove rings or tight clothing from the burned area before it swells.</span></li>
+                <li><span><strong>Cover with clean cloth:</strong> Loosely cover the burn with a sterile, non-fluffy bandage or clean cloth.</span></li>
+                <li><span><strong>Do NOT apply ice:</strong> Ice can cause further damage to the skin. Do not apply butter, ointments, or toothpaste.</span></li>
+                <li><span><strong>Monitor:</strong> If blisters form, do not pop them. Seek medical advice if the burn worsens.</span></li>
+              </ol>
+            </div>
+          </div>`;
+      } else {
+        hint.textContent = '🚨 Severe burn — call 108 immediately!';
+        hint.style.color = '#ef4444';
+
+        resultDiv.innerHTML = `
+          <div class="res-card res-danger">
+            <div class="res-header">
+              <span class="res-icon">🔴</span>
+              <div>
+                <h3 class="res-title">Severe Burn Detected</h3>
+                <span class="res-badge res-badge-danger">SEVERE</span>
+              </div>
+            </div>
+
+            <div class="res-emergency">
+              <div class="res-em-pulse"></div>
+              <div class="res-em-text">
+                <strong>📞 Call Ambulance Immediately</strong>
+                <span>Call now and follow steps below</span>
+              </div>
+              <a href="tel:108" class="res-call-btn">📞 108</a>
+            </div>
+
+            <p class="res-desc">This appears to be a deep or widespread burn (second or third-degree). It requires immediate medical attention.</p>
+
+            <div class="res-steps-wrap">
+              <h4 class="res-steps-title">📋 Emergency Procedure</h4>
+              <ol class="res-steps">
+                <li><span><strong>Do NOT remove stuck clothing:</strong> If clothing is stuck to the burn, leave it there. Removing it can cause severe damage.</span></li>
+                <li><span><strong>Cover with clean dry cloth:</strong> Loosely cover the burn with a sterile, non-fluffy dressing or clean plastic wrap.</span></li>
+                <li><span><strong>Do NOT apply creams or ice:</strong> Never apply ice, lotions, creams, or home remedies to a severe burn.</span></li>
+                <li><span><strong>Keep person calm:</strong> Keep the person warm, calm, and still to prevent shock while waiting for the ambulance.</span></li>
+                <li><span><strong>Elevate:</strong> If possible, safely elevate the burned area above heart level.</span></li>
+              </ol>
+            </div>
+          </div>`;
+      }
+      animateIn(resultDiv);
+    }
+
+    // ── Camera functionality ──
+    let stream = null;
+    let currentFacingMode = 'environment';
+
+    async function startCamera() {
+      try {
+        const constraints = {
+          video: { facingMode: currentFacingMode, width: { ideal: 1280 }, height: { ideal: 720 } }
+        };
+        stream = await navigator.mediaDevices.getUserMedia(constraints);
+        const video = document.getElementById('camera');
+        video.srcObject = stream;
+        document.getElementById('cameraPlaceholder').style.display = 'none';
+        document.getElementById('captureBtn').disabled = false;
+      } catch (error) {
+        console.error('Error accessing camera:', error);
+        alert('Unable to access camera. Please check permissions and try again.');
+      }
+    }
+
+    function capturePhoto() {
+      const video = document.getElementById('camera');
+      const canvas = document.getElementById('canvas');
+      const context = canvas.getContext('2d');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      
+      canvas.toBlob(blob => {
+        latestImageBlob = blob;
+        latestFileName = 'captured_photo.jpg'; // Defaults to severe
+        const photoUrl = URL.createObjectURL(blob);
+        addPhotoToGallery(photoUrl);
+        updateAnalyseHint();
+      });
+    }
+
+    function switchCamera() {
+      if (stream) stream.getTracks().forEach(track => track.stop());
+      currentFacingMode = currentFacingMode === 'environment' ? 'user' : 'environment';
+      startCamera();
+    }
+
+    // ── Drag and drop ──
+    const uploadArea = document.getElementById('uploadArea');
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('drag-over');
+    });
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('drag-over');
+    });
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) {
+        latestImageBlob = file;
+        latestFileName = file.name;
+        const photoUrl = URL.createObjectURL(file);
+        addPhotoToGallery(photoUrl);
+        updateAnalyseHint();
+      }
+    });
+
+    // ── Fade-in animation ──
+    function animateIn(el) {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(16px)';
+      el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+      void el.offsetWidth; // Force reflow
+      setTimeout(() => {
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      }, 30);
+    }
+
+    // ── SOS Modal ──
+    function openSosModal()  { document.getElementById('sosModal').classList.add('open'); }
+    function closeSosModal() { document.getElementById('sosModal').classList.remove('open'); }
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+      if (stream) stream.getTracks().forEach(track => track.stop());
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Accident Emergency - LifeSaver AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="accident-theme">
+  <!-- Top Header -->
+  <header class="top-header">
+    <a href="emergency.html" class="back-btn">←</a>
+    <h1 class="header-title">Accident Emergency</h1>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    
+    <!-- Step 1: Consciousness Check -->
+    <div class="action-card dynamic-section active" id="step1">
+      <h2 class="question-title">Is the person conscious?</h2>
+      <p class="question-subtitle">Are they awake and able to respond to you?</p>
+      
+      <div class="btn-row">
+        <button class="btn-large btn-green" onclick="handleConscious(true)">
+          ✅ Yes
+        </button>
+        <button class="btn-large btn-red" onclick="handleConscious(false)">
+          ❌ No
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 2: Injury Type (If Conscious) -->
+    <div class="action-card dynamic-section" id="step2">
+      <h2 class="question-title">What is the primary injury?</h2>
+      <p class="question-subtitle">Select the most severe issue.</p>
+      
+      <div class="options-col">
+        <button class="btn-option" onclick="analyzeResult('bleeding')">
+          🩸 Severe Bleeding
+        </button>
+        <button class="btn-option" onclick="analyzeResult('fracture')">
+          🦴 Suspected Fracture
+        </button>
+        <button class="btn-option" onclick="analyzeResult('minor')">
+          🤕 Minor Injury / Scrape
+        </button>
+      </div>
+    </div>
+
+    <!-- Result Container -->
+    <div id="resultContainer" class="dynamic-section"></div>
+
+  </main>
+
+  <script>
+    // Elements
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const resultContainer = document.getElementById('resultContainer');
+
+    function hideAll() {
+      step1.classList.remove('active');
+      step2.classList.remove('active');
+      resultContainer.classList.remove('active');
+      resultContainer.innerHTML = '';
+    }
+
+    function handleConscious(isConscious) {
+      hideAll();
+      
+      if (isConscious) {
+        // Go to Step 2
+        setTimeout(() => {
+          step2.classList.add('active');
+        }, 50);
+      } else {
+        // Unconscious -> Immediate Critical Result
+        showAnalyzing('unconscious');
+      }
+    }
+
+    function analyzeResult(type) {
+      hideAll();
+      showAnalyzing(type);
+    }
+
+    function showAnalyzing(type) {
+      resultContainer.innerHTML = `
+        <div class="result-card">
+          <div class="analyzing-box">
+            <div class="spinner"></div>
+            <p>Analyzing situation...</p>
+          </div>
+        </div>
+      `;
+      resultContainer.classList.add('active');
+
+      setTimeout(() => {
+        renderResult(type);
+      }, 1000);
+    }
+
+    function renderResult(type) {
+      let content = '';
+
+      if (type === 'unconscious') {
+        content = `
+          <div class="result-card res-danger">
+            <div class="result-header">
+              <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🚨</div>
+              <h3 class="result-title">Critical Condition</h3>
+              <p style="color: var(--text-muted);">Person is unconscious following an accident.</p>
+            </div>
+            
+            <div class="emergency-call-box">
+              <div class="call-text">
+                <strong>Call Ambulance Immediately</strong>
+                <span>Start CPR if not breathing</span>
+              </div>
+              <a href="tel:108" class="call-btn">📞 108</a>
+            </div>
+
+            <ul class="steps-list">
+              <li><strong>Do not move them:</strong> Unless they are in immediate danger (e.g., fire). Moving them may worsen spinal injuries.</li>
+              <li><strong>Check breathing:</strong> Listen for breath sounds. If not breathing, start CPR immediately.</li>
+              <li><strong>Stop bleeding:</strong> If there is heavy bleeding, apply firm direct pressure using a clean cloth.</li>
+              <li><strong>Stay with them:</strong> Keep them warm and wait for emergency services to arrive.</li>
+            </ul>
+          </div>
+        `;
+      } 
+      else if (type === 'bleeding') {
+        content = `
+          <div class="result-card res-danger">
+            <div class="result-header">
+              <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🩸</div>
+              <h3 class="result-title">Severe Bleeding</h3>
+              <p style="color: var(--text-muted);">Immediate action required to prevent blood loss.</p>
+            </div>
+
+            <div class="emergency-call-box">
+              <div class="call-text">
+                <strong>Call Ambulance</strong>
+                <span>Act immediately while calling</span>
+              </div>
+              <a href="tel:108" class="call-btn">📞 108</a>
+            </div>
+
+            <ul class="steps-list">
+              <li><strong>Apply direct pressure:</strong> Use a clean cloth or bandage and press firmly directly on the wound.</li>
+              <li><strong>Do not remove cloth:</strong> If blood soaks through, add more layers on top. Do not take the first one off.</li>
+              <li><strong>Elevate:</strong> If it's on a limb, raise it above heart level to slow blood flow.</li>
+              <li><strong>Keep them calm:</strong> Have the person lie down to prevent fainting and keep them warm.</li>
+            </ul>
+          </div>
+        `;
+      }
+      else if (type === 'fracture') {
+        content = `
+          <div class="result-card res-warning">
+            <div class="result-header">
+              <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🦴</div>
+              <h3 class="result-title">Suspected Fracture</h3>
+              <p style="color: var(--text-muted);">Prevent further injury by immobilizing the area.</p>
+            </div>
+
+            <div class="emergency-call-box" style="background: rgba(243, 156, 18, 0.1); border-color: rgba(243, 156, 18, 0.3);">
+              <div class="call-text">
+                <strong style="color: #f5b041;">Seek Medical Help</strong>
+                <span>Do not force movement</span>
+              </div>
+              <a href="tel:108" class="call-btn" style="background: var(--accent-orange);">📞 108</a>
+            </div>
+
+            <ul class="steps-list">
+              <li><strong>Immobilize:</strong> Do not attempt to realign the bone or push a bone back in.</li>
+              <li><strong>Support the injury:</strong> Use a splint or padding to keep the area completely still.</li>
+              <li><strong>Apply cold pack:</strong> Wrap ice in a cloth and apply to reduce swelling. Do not apply ice directly to skin.</li>
+              <li><strong>Treat bleeding:</strong> If there is bleeding, apply pressure around the bone, not directly on it.</li>
+            </ul>
+          </div>
+        `;
+      }
+      else if (type === 'minor') {
+        content = `
+          <div class="result-card res-safe">
+            <div class="result-header">
+              <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🩹</div>
+              <h3 class="result-title">Minor Injury</h3>
+              <p style="color: var(--text-muted);">Basic first aid should be sufficient.</p>
+            </div>
+
+            <ul class="steps-list">
+              <li><strong>Clean the wound:</strong> Wash with clean, running water for several minutes.</li>
+              <li><strong>Apply light pressure:</strong> Use a sterile gauze to stop any minor bleeding.</li>
+              <li><strong>Apply antibiotic ointment:</strong> Once clean and dry, apply ointment to prevent infection.</li>
+              <li><strong>Cover it:</strong> Protect the area with a clean bandage or plaster.</li>
+              <li><strong>Monitor:</strong> Watch for signs of infection (redness, swelling, heat) over the next few days.</li>
+            </ul>
+            
+            <button class="btn-option" style="margin-top: 1.5rem;" onclick="location.reload()">
+              🔄 Start Over
+            </button>
+          </div>
+        `;
+      }
+
+      resultContainer.innerHTML = content;
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fainting Emergency - LifeSaver AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── Page-specific styles ── */
+    .faint-hero {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.15) 0%, rgba(139, 92, 246, 0.10) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .faint-hero-icon {
+      font-size: 3rem;
+      flex-shrink: 0;
+      animation: float-icon 3s ease-in-out infinite;
+    }
+
+    @keyframes float-icon {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .faint-hero h2 {
+      margin: 0 0 0.35rem;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 1px;
+      color: #f8fafc;
+    }
+
+    .faint-hero p {
+      margin: 0;
+      color: #94a3b8;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* ── Question area ── */
+    .question-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .question-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .btn-yes, .btn-no {
+      padding: 1rem 2.5rem;
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+    }
+
+    .btn-yes {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      box-shadow: 0 4px 16px rgba(34, 197, 94, 0.35);
+    }
+
+    .btn-yes:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(34, 197, 94, 0.45);
+    }
+
+    .btn-no {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      box-shadow: 0 4px 16px rgba(239, 68, 68, 0.35);
+    }
+
+    .btn-no:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(239, 68, 68, 0.45);
+    }
+
+    /* ── Analyzing state ── */
+    .analyzing-state {
+      text-align: center;
+      padding: 2rem;
+      color: #94a3b8;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2.5px solid rgba(163, 180, 255, 0.25);
+      border-top-color: #a3b4ff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ── Result cards ── */
+    #result { margin-top: 1.5rem; }
+
+    .res-card {
+      border-radius: 14px;
+      padding: 1.5rem;
+      overflow: hidden;
+    }
+
+    .res-card.res-danger {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1.5px solid rgba(239, 68, 68, 0.35);
+    }
+
+    .res-card.res-safe {
+      background: rgba(34, 197, 94, 0.08);
+      border: 1.5px solid rgba(34, 197, 94, 0.35);
+    }
+
+    .res-header {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      margin-bottom: 1rem;
+    }
+
+    .res-icon { font-size: 2rem; flex-shrink: 0; }
+
+    .res-title {
+      margin: 0 0 0.3rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #f1f5f9;
+    }
+
+    .res-badge {
+      display: inline-block;
+      padding: 0.2rem 0.65rem;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+
+    .res-badge-danger { background: rgba(239,68,68,0.25); color: #fca5a5; }
+    .res-badge-safe { background: rgba(34,197,94,0.25); color: #86efac; }
+
+    .res-emergency {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      background: rgba(239,68,68,0.12);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+      margin: 1rem 0;
+    }
+
+    .res-em-pulse {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ef4444;
+      flex-shrink: 0;
+      animation: em-pulse 1.2s ease-in-out infinite;
+    }
+
+    @keyframes em-pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.4); }
+    }
+
+    .res-em-text {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .res-em-text strong { color: #fca5a5; font-size: 0.95rem; }
+    .res-em-text span { color: #94a3b8; font-size: 0.82rem; }
+
+    .res-call-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      background: #ef4444;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.15s;
+      flex-shrink: 0;
+    }
+
+    .res-call-btn:hover { background: #dc2626; }
+
+    .res-desc {
+      color: #94a3b8;
+      font-size: 0.92rem;
+      line-height: 1.65;
+      margin: 0 0 1rem;
+    }
+
+    .res-steps-wrap h4 {
+      margin: 0 0 0.65rem;
+      color: #e2e8f0;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .res-steps {
+      margin: 0;
+      padding-left: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .res-steps li {
+      color: #cbd5e1;
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    /* ── First aid reference ── */
+    .first-aid-section {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .first-aid-section h3 {
+      margin: 0 0 1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+    }
+
+    .step-number {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, #38bdf8, #8b5cf6);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .step-item span:last-child {
+      color: #94a3b8;
+      font-size: 0.92rem;
+      line-height: 1.65;
+      padding-top: 4px;
+    }
+
+    .emergency-call {
+      margin-top: 1.25rem;
+    }
+
+    .emergency-call .btn {
+      width: 100%;
+      justify-content: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="site-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">🚨</div>
+        <div>
+          <span class="brand-name">LifeSaver AI</span>
+          <span class="brand-tag">Emergency care dashboard</span>
+        </div>
+      </div>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="emergency.html">Emergency Response</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <button class="btn btn-sos-nav" type="button" onclick="openSosModal()">SOS Call</button>
+    </header>
+
+    <main>
+      <div style="margin-bottom: 1.5rem; padding: 0 1rem;">
+        <a href="emergency.html" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); color: #fff; text-decoration: none; font-size: 1.2rem; transition: background 0.2s, transform 0.2s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'; this.style.transform='translateX(-2px)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.05)'; this.style.transform='translateX(0)'">←</a>
+      </div>
+      <section class="section-block">
+        <div class="section-header">
+          <span class="section-label">Fainting Emergency</span>
+          <h2>Unconscious Person Response</h2>
+          <p>Follow the guided steps below to provide immediate care.</p>
+        </div>
+
+        <!-- Hero banner -->
+        <div class="faint-hero">
+          <div class="faint-hero-icon">😵</div>
+          <div>
+            <h2>Assess the Situation</h2>
+            <p>An unconscious person requires immediate assessment. Answer the critical question below so we can guide you through the correct procedure.</p>
+          </div>
+        </div>
+
+        <!-- Question Area -->
+        <div class="question-box">
+          <h3 class="question-title">Is the person breathing?</h3>
+          <div class="btn-group">
+            <button class="btn-yes" onclick="analyzeFaint(true)">
+              <span>✅</span> Yes
+            </button>
+            <button class="btn-no" onclick="analyzeFaint(false)">
+              <span>❌</span> No
+            </button>
+          </div>
+        </div>
+
+        <!-- Result container -->
+        <div id="result"></div>
+
+        <!-- First Aid Quick Reference -->
+        <div class="first-aid-section">
+          <h3>⚡ Quick Reference — Recovery Position</h3>
+          <div class="step-list">
+            <div class="step-item">
+              <span class="step-number">1</span>
+              <span>Kneel beside the person.</span>
+            </div>
+            <div class="step-item">
+              <span class="step-number">2</span>
+              <span>Place the arm nearest you at a right angle to their body.</span>
+            </div>
+            <div class="step-item">
+              <span class="step-number">3</span>
+              <span>Bring the other arm across their chest, holding the back of their hand against their nearest cheek.</span>
+            </div>
+            <div class="step-item">
+              <span class="step-number">4</span>
+              <span>With your other hand, pull their far knee up so their foot is flat on the floor.</span>
+            </div>
+            <div class="step-item">
+              <span class="step-number">5</span>
+              <span>Pull the knee towards you to roll them onto their side, then tilt their head back slightly.</span>
+            </div>
+          </div>
+          <div class="emergency-call">
+            <button class="btn btn-emergency" onclick="window.location.href='tel:108'">
+              🚨 Call Ambulance (108)
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- SOS Modal -->
+  <div class="modal-overlay" id="sosModal">
+    <div class="modal">
+      <div class="modal-title">🚨 SOS Activated</div>
+      <p class="modal-body">
+        This will alert <strong>all emergency services</strong> to your location.
+        Only proceed in a real emergency.
+      </p>
+      <div class="modal-actions">
+        <button class="modal-btn cancel" onclick="closeSosModal()">Cancel</button>
+        <button class="modal-btn confirm" onclick="window.location.href='tel:112'">SEND SOS</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    // ── Main analysis function ──
+    function analyzeFaint(isBreathing) {
+      const result = document.getElementById('result');
+
+      // Clear the current result and show loading state
+      result.innerHTML = `
+        <div class="analyzing-state">
+          <div class="spinner"></div>
+          <span>Analyzing condition...</span>
+        </div>`;
+      
+      // Remove any existing animation
+      result.style.opacity = '1';
+      result.style.transform = 'translateY(0)';
+
+      setTimeout(() => {
+        if (isBreathing) {
+          showBreathing(result);
+        } else {
+          showNotBreathing(result);
+        }
+      }, 1000);
+    }
+
+    // ── Safe / Breathing state ──
+    function showBreathing(resultDiv) {
+      resultDiv.innerHTML = `
+        <div class="res-card res-safe">
+          <div class="res-header">
+            <span class="res-icon">✅</span>
+            <div>
+              <h3 class="res-title">Person is breathing</h3>
+              <span class="res-badge res-badge-safe">STABLE</span>
+            </div>
+          </div>
+
+          <p class="res-desc">The person is unconscious but breathing normally. Follow these steps to keep their airway clear and monitor them.</p>
+
+          <div class="res-steps-wrap">
+            <h4>📋 Care Steps</h4>
+            <ol class="res-steps">
+              <li><span><strong>Lay flat:</strong> Ensure the person is lying comfortably on their back.</span></li>
+              <li><span><strong>Raise legs:</strong> Elevate their legs about 12 inches above their heart level if possible.</span></li>
+              <li><span><strong>Loosen clothing:</strong> Loosen any tight clothing around their neck or waist.</span></li>
+              <li><span><strong>Recovery position:</strong> If they might vomit or remain unconscious, place them in the recovery position (see quick reference below).</span></li>
+              <li><span><strong>Stay until conscious:</strong> Monitor them continuously. Call 108 if they don't wake up quickly.</span></li>
+            </ol>
+          </div>
+        </div>`;
+      animateIn(resultDiv);
+    }
+
+    // ── Danger / Not Breathing state ──
+    function showNotBreathing(resultDiv) {
+      resultDiv.innerHTML = `
+        <div class="res-card res-danger">
+          <div class="res-header">
+            <span class="res-icon">🚨</span>
+            <div>
+              <h3 class="res-title">Critical Condition</h3>
+              <span class="res-badge res-badge-danger">LIFE THREATENING</span>
+            </div>
+          </div>
+
+          <div class="res-emergency">
+            <div class="res-em-pulse"></div>
+            <div class="res-em-text">
+              <strong>📞 Call Ambulance Immediately</strong>
+              <span>Start CPR immediately after calling</span>
+            </div>
+            <a href="tel:108" class="res-call-btn">📞 108</a>
+          </div>
+
+          <p class="res-desc">The person is not breathing normally. The heart may have stopped. Act immediately!</p>
+
+          <div class="res-steps-wrap">
+            <h4>📋 Emergency CPR Procedure</h4>
+            <ol class="res-steps">
+              <li><span><strong>Start CPR:</strong> Kneel next to the person's chest.</span></li>
+              <li><span><strong>Hand position:</strong> Place the heel of one hand in the center of their chest, place your other hand on top and interlock fingers.</span></li>
+              <li><span><strong>Chest compressions:</strong> Push hard and fast (at least 2 inches deep, 100-120 beats per minute).</span></li>
+              <li><span><strong>Continue:</strong> Do not stop compressions until emergency help arrives and takes over, or the person starts breathing normally.</span></li>
+            </ol>
+          </div>
+        </div>`;
+      animateIn(resultDiv);
+    }
+
+    // ── Fade-in animation ──
+    function animateIn(el) {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(16px)';
+      el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+      // Force reflow
+      void el.offsetWidth;
+      setTimeout(() => {
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      }, 30);
+    }
+
+    // ── SOS Modal ──
+    function openSosModal()  { document.getElementById('sosModal').classList.add('open'); }
+    function closeSosModal() { document.getElementById('sosModal').classList.remove('open'); }
+  </script>
+</body>
+
+</html>
