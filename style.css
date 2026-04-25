@@ -768,3 +768,262 @@ a {
     gap: 14px;
   }
 }
+
+/* Camera and Photo Upload Styles */
+.camera-section {
+  display: grid;
+  gap: 32px;
+  margin-bottom: 40px;
+}
+
+.camera-container {
+  background: rgba(17,18,24,0.9);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius);
+  padding: 24px;
+  display: grid;
+  gap: 20px;
+}
+
+.camera-preview {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  aspect-ratio: 4/3;
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#camera {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.camera-placeholder {
+  text-align: center;
+  color: #888;
+  padding: 20px;
+}
+
+.camera-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+.camera-controls {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.photo-gallery {
+  background: rgba(17,18,24,0.9);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.photo-gallery h3 {
+  margin: 0 0 20px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+}
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 16px;
+}
+
+.photo-item {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #333;
+}
+
+.photo-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.delete-photo {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: rgba(0,0,0,0.7);
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.2s ease;
+}
+
+.delete-photo:hover {
+  background: rgba(220,53,69,0.8);
+}
+
+.photo-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  color: #666;
+  text-align: center;
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  border: 2px dashed rgba(255,255,255,0.1);
+}
+
+.photo-placeholder span {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.upload-section {
+  margin-bottom: 40px;
+}
+
+.upload-section h3 {
+  margin: 0 0 20px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+}
+
+.upload-area {
+  border: 2px dashed rgba(255,255,255,0.2);
+  border-radius: 12px;
+  padding: 40px 20px;
+  text-align: center;
+  background: rgba(255,255,255,0.02);
+  transition: border-color 0.2s ease, background 0.2s ease;
+  cursor: pointer;
+}
+
+.upload-area:hover,
+.upload-area.drag-over {
+  border-color: var(--red);
+  background: rgba(232,25,44,0.05);
+}
+
+.upload-placeholder span {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.first-aid-section {
+  background: rgba(17,18,24,0.9);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.first-aid-section h3 {
+  margin: 0 0 24px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+}
+
+.step-list {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.step-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 16px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  border-left: 4px solid var(--accent);
+}
+
+.step-number {
+  background: var(--accent);
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.emergency-call {
+  text-align: center;
+}
+
+/* Responsive Design for Camera */
+@media (max-width: 768px) {
+  .camera-section {
+    gap: 24px;
+  }
+
+  .camera-container {
+    padding: 16px;
+  }
+
+  .camera-preview {
+    max-width: 100%;
+  }
+
+  .camera-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .photo-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 12px;
+  }
+
+  .upload-area {
+    padding: 24px 16px;
+  }
+
+  .first-aid-section {
+    padding: 16px;
+  }
+
+  .step-item {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .step-number {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .photo-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .camera-controls .btn {
+    width: 100%;
+  }
+}

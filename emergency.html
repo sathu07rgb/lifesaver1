@@ -41,7 +41,7 @@
           <p id="sectionDesc">Tap any situation below to get immediate first aid steps and emergency guidance.</p>
         </div>
         <div class="card-grid">
-          <button class="action-card bleeding-card" type="button" onclick="getHelp('bleeding')">
+          <button class="action-card bleeding-card" type="button" onclick="window.location.href='bleeding.html'">
             <strong id="bleedingTitle">Bleeding</strong>
             <p id="bleedingDesc">Fast first aid steps for severe bleeding.</p>
           </button>
@@ -61,29 +61,6 @@
             <strong id="accidentTitle">Accident</strong>
             <p id="accidentDesc">Manage trauma until help arrives.</p>
           </button>
-        </div>
-      </section>
-
-      <section class="section-block result-display" id="contact">
-        <div class="section-header">
-          <span class="section-label" id="resultLabel">Result Display</span>
-          <h2 id="resultTitle">Emergency guidance panel</h2>
-          <p id="resultDesc">Detailed advice appears here once you choose an emergency action.</p>
-        </div>
-        <div class="result-card">
-          <div class="result-top">
-            <div>
-              <h3 id="detailHeading">Ready for your first aid action</h3>
-              <p class="result-sub" id="detailSub">Select Bleeding, Choking, Fainted, Burn, or Accident above.</p>
-            </div>
-            <button class="btn btn-close" type="button" onclick="closeDetail()" id="resultCloseBtn">Close</button>
-          </div>
-          <div id="detailContent" class="result-content">
-            <div class="result-placeholder">
-              <span class="placeholder-icon">📍</span>
-              <p id="resultPlaceholder">Choose an emergency to see step-by-step instructions and call information.</p>
-            </div>
-          </div>
         </div>
       </section>
     </main>
