@@ -275,20 +275,7 @@ a {
   background-position: center;
 }
 
-.action-card.bleeding-card .card-emoji,
-.action-card.choking-card .card-emoji,
-.action-card.faint-card .card-emoji,
-.action-card.burn-card .card-emoji {
-  background: rgba(255,255,255,0.12);
-}
 
-.action-card.choking-card,
-.action-card.faint-card,
-.action-card.burn-card,
-.action-card.accident-card {
-  background-size: cover;
-  background-position: center;
-}
 
 .action-card.choking-card {
   background-image: linear-gradient(180deg, rgba(0,0,0,0.1), rgba(0,0,0,0.3)), url('assets/chock.jpeg');
