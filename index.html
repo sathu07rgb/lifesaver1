@@ -29,7 +29,10 @@
 
     html, body {
       height: 100%;
-      background: var(--bg);
+      min-height: 100%;
+      background: radial-gradient(circle at 20% 20%, rgba(232,25,44,0.06), transparent 18%),
+                  radial-gradient(circle at 80% 10%, rgba(255,255,255,0.03), transparent 15%),
+                  #0a0a0b;
       color: var(--text);
       font-family: 'DM Sans', sans-serif;
       display: flex;
@@ -61,6 +64,9 @@
       flex-direction: column;
       padding: 0 0 32px;
       overflow: hidden;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: app-fade 0.42s ease-out 0.12s forwards;
     }
 
     /* ── TOP BAR ── */
@@ -100,6 +106,9 @@
       font-weight: 400;
       font-family: var(--mono);
     }
+    @keyframes app-fade {
+      to { opacity: 1; transform: translateY(0); }
+    }
     .status-dot {
       display: inline-block;
       width: 7px; height: 7px;
@@ -134,54 +143,48 @@
       margin-bottom: 12px;
     }
 
-    /* ── INPUT SECTION ── */
-    .input-wrap { position: relative; }
-    .emergency-input {
-      width: 100%;
-      background: var(--surface2);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px 16px;
+    /* ── EMERGENCY BUTTONS ── */
+    .emergency-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(138px, 1fr));
+      gap: 12px;
+    }
+    .emergency-btn {
+      background: linear-gradient(180deg, #16161b 0%, var(--surface2) 100%);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 18px 14px;
       color: var(--text);
-      font-family: 'DM Sans', sans-serif;
       font-size: 15px;
-      resize: none;
-      min-height: 80px;
-      line-height: 1.5;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      outline: none;
-    }
-    .emergency-input::placeholder { color: var(--text-muted); }
-    .emergency-input:focus {
-      border-color: var(--red-dim);
-      box-shadow: 0 0 0 3px var(--red-faint);
-    }
-
-    .get-help-btn {
-      width: 100%;
-      margin-top: 12px;
-      padding: 15px;
-      background: var(--red);
-      color: #fff;
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 18px;
-      letter-spacing: 2px;
-      border: none;
-      border-radius: var(--radius);
+      font-weight: 700;
       cursor: pointer;
-      transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
-      position: relative;
-      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 110px;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+      text-align: center;
+      line-height: 1.2;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 8px 20px rgba(0,0,0,0.14);
     }
-    .get-help-btn::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%);
-      pointer-events: none;
+    .emergency-btn span {
+      display: block;
     }
-    .get-help-btn:hover { background: #ff1f33; box-shadow: 0 4px 24px var(--red-glow); }
-    .get-help-btn:active { transform: scale(0.98); }
+    .emergency-btn strong {
+      font-size: 16px;
+      letter-spacing: 0.5px;
+    }
+    .emergency-btn:hover {
+      transform: translateY(-3px) scale(1.02);
+      background: linear-gradient(180deg, #1f1f25 0%, var(--surface) 100%);
+      box-shadow: 0 14px 32px rgba(0,0,0,0.25), 0 0 0 2px rgba(232,25,44,0.08);
+    }
+    .emergency-btn:active {
+      transform: translateY(0) scale(0.98);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.22);
+    }
 
     /* ── SOS SECTION ── */
     .sos-card {
@@ -204,7 +207,7 @@
       position: absolute;
       border-radius: 50%;
       background: var(--red-glow);
-      animation: sos-pulse 2s ease-out infinite;
+      animation: sos-pulse 2.6s ease-out infinite;
     }
     .sos-ring::before { width: 100%; height: 100%; animation-delay: 0s; }
     .sos-ring::after  { width: 115%; height: 115%; animation-delay: 0.6s; }
@@ -226,17 +229,18 @@
       letter-spacing: 4px;
       cursor: pointer;
       box-shadow:
-        0 0 0 6px rgba(232,25,44,0.15),
+        0 0 0 6px rgba(232,25,44,0.18),
         0 8px 32px rgba(0,0,0,0.6),
         inset 0 1px 0 rgba(255,255,255,0.2);
-      transition: transform 0.15s, box-shadow 0.2s;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       gap: 2px;
+      animation: sos-button-breathe 3.4s ease-in-out infinite;
     }
     .sos-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 0 8px rgba(232,25,44,0.25), 0 12px 40px rgba(232,25,44,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+      transform: scale(1.06);
+      box-shadow: 0 0 0 10px rgba(232,25,44,0.24), 0 12px 40px rgba(232,25,44,0.45), inset 0 1px 0 rgba(255,255,255,0.2);
     }
     .sos-btn:active { transform: scale(0.96); }
     .sos-sub { font-size: 9px; letter-spacing: 1px; opacity: 0.75; font-family: 'DM Sans', sans-serif; font-weight: 500; }
@@ -252,14 +256,14 @@
     /* ── EMERGENCY ACTIONS ── */
     .actions-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
       gap: 10px;
     }
     .action-btn {
       background: var(--surface2);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 14px 8px;
+      padding: 14px 10px;
       color: var(--text);
       font-size: 12px;
       font-weight: 600;
@@ -302,6 +306,7 @@
       color: var(--text-muted);
       font-size: 13px;
       padding: 16px 0 8px;
+      text-align: center;
     }
     .result-placeholder .ph-icon { font-size: 28px; opacity: 0.4; }
     .result-body { display: none; }
@@ -419,6 +424,54 @@
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+    @keyframes sos-button-breathe {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+    @keyframes detail-fade {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .detail-page {
+      display: none;
+      padding: 20px 18px;
+      flex: 1;
+      min-height: 100dvh;
+    }
+    .detail-page.active { display: flex; flex-direction: column; gap: 18px; }
+    .detail-card {
+      animation: detail-fade 0.32s ease-out both;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .back-btn {
+      align-self: flex-start;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .back-btn:hover { background: rgba(255,255,255,0.12); }
+    .back-btn:active { transform: scale(0.98); }
+    .detail-heading {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 24px;
+      letter-spacing: 1.5px;
+      color: var(--red);
+      line-height: 1.1;
+    }
+
     @media (min-width: 440px) {
       .phone { border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
       body { padding: 24px 0; align-items: flex-start; }
@@ -436,20 +489,31 @@
 
   <div class="content">
 
-    <!-- INPUT SECTION -->
+    <!-- EMERGENCY ACTIONS -->
     <div class="card">
-      <div class="card-label">⚡ Describe Emergency</div>
-      <div class="input-wrap">
-        <textarea
-          class="emergency-input"
-          id="emergencyInput"
-          placeholder="Describe emergency (e.g., bleeding, faint, choking…)"
-          rows="3"
-        ></textarea>
+      <div class="card-label">⚡ Emergency Quick Actions</div>
+      <div class="emergency-grid">
+        <button class="emergency-btn" onclick="getHelp('bleeding')">
+          <span>🩸</span>
+          <strong>Bleeding</strong>
+        </button>
+        <button class="emergency-btn" onclick="getHelp('choking')">
+          <span>😮‍💨</span>
+          <strong>Choking</strong>
+        </button>
+        <button class="emergency-btn" onclick="getHelp('faint')">
+          <span>😵</span>
+          <strong>Fainted</strong>
+        </button>
+        <button class="emergency-btn" onclick="getHelp('burn')">
+          <span>🔥</span>
+          <strong>Burn</strong>
+        </button>
+        <button class="emergency-btn" onclick="getHelp('accident')">
+          <span>🚑</span>
+          <strong>Accident</strong>
+        </button>
       </div>
-      <button class="get-help-btn" id="getHelpBtn" onclick="handleGetHelp()">
-        GET HELP NOW
-      </button>
     </div>
 
     <!-- SOS SECTION -->
@@ -486,17 +550,15 @@
       </div>
     </div>
 
-    <!-- RESULT SECTION -->
-    <div class="card result-card" id="resultCard">
-      <div class="card-label">🩺 First Aid Guide</div>
-      <div class="result-placeholder" id="resultPlaceholder">
-        <span class="ph-icon">📋</span>
-        <span>Describe an emergency above<br>to get step-by-step guidance</span>
-      </div>
-      <div class="result-body" id="resultBody"></div>
-    </div>
-
   </div><!-- /content -->
+
+  <div class="detail-page" id="detailPage">
+    <button class="back-btn" onclick="closeDetail()">← Back to emergencies</button>
+    <div class="detail-card" id="detailCard">
+      <div class="detail-heading" id="detailHeading">Emergency Guidance</div>
+      <div id="detailContent"></div>
+    </div>
+  </div>
 </div><!-- /phone -->
 
 <!-- SOS MODAL -->
@@ -607,61 +669,73 @@
         "TIME: If any signs present, call 108 immediately — time is critical.",
         "Keep person calm, do not give food or water, note the time of symptoms."
       ]
+    },
+    accident: {
+      label: "🚑 General Accident Response",
+      call: "108",
+      steps: [
+        "Ensure the scene is safe before approaching the injured person.",
+        "Stop any major bleeding by applying firm pressure with a clean cloth.",
+        "Keep the injured area still and supported; do not move them unless unsafe.",
+        "Cover with a blanket to prevent shock and keep them calm.",
+        "Call 108 immediately for serious injuries, broken bones, or heavy bleeding."
+      ]
     }
-  };
-
-  const keywords = {
-    bleed: 'bleeding', blood: 'bleeding', wound: 'bleeding', cut: 'bleeding',
-    faint: 'faint', unconscious: 'faint', collapse: 'faint', dizzy: 'faint', pass: 'faint',
-    chok: 'choking', airway: 'choking',
-    burn: 'burn', fire: 'burn', scald: 'burn',
-    heart: 'heart', chest: 'heart', cardiac: 'heart',
-    cpr: 'cpr', resuscit: 'cpr', breathing: 'cpr', not breathing: 'cpr',
-    fractur: 'fracture', broken: 'fracture', bone: 'fracture', break: 'fracture',
-    stroke: 'stroke', paralys: 'stroke', speech: 'stroke', facial: 'stroke'
   };
 
   /* ── HANDLERS ── */
-  function handleGetHelp() {
-    const input = document.getElementById('emergencyInput').value.trim().toLowerCase();
-    if (!input) { showToast('⚠ Please describe the emergency first.'); return; }
-
-    let matched = null;
-    for (const [kw, type] of Object.entries(keywords)) {
-      if (input.includes(kw)) { matched = type; break; }
+  function getHelp(type) {
+    const data = firstAidData[type];
+    if (!data) {
+      showToast('⚠ Unable to find guidance for that emergency.');
+      showDetail(null);
+      return;
     }
-
-    if (!matched) {
-      showResult(null, input);
-    } else {
-      showResult(firstAidData[matched]);
-    }
+    showDetail(data);
   }
 
-  function showResult(data, rawInput) {
-    const ph    = document.getElementById('resultPlaceholder');
-    const body  = document.getElementById('resultBody');
-    ph.style.display = 'none';
-    body.classList.add('visible');
+  function showDetail(data) {
+    const page = document.getElementById('detailPage');
+    const main = document.querySelector('.content');
+    const heading = document.getElementById('detailHeading');
+    const content = document.getElementById('detailContent');
+
+    page.classList.add('active');
+    main.style.display = 'none';
 
     if (!data) {
-      body.innerHTML = `
+      heading.textContent = 'Emergency Guidance';
+      content.innerHTML = `
         <div class="call-label">General Advice</div>
         <ul class="step-list">
           ${['Stay calm and keep the person reassured.', 'Call 108 if the situation seems serious or worsening.', 'Keep the person still and comfortable until help arrives.', 'Do not give food or water unless absolutely necessary.', 'Monitor breathing and pulse continuously.']
             .map((s, i) => `<li class="step-item" style="animation-delay:${i*0.07}s"><span class="step-num">${i+1}</span><span>${s}</span></li>`)
             .join('')}
         </ul>`;
+      window.location.hash = 'help';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
+    heading.textContent = `${data.label}`;
     const stepsHtml = data.steps
       .map((s, i) => `<li class="step-item" style="animation-delay:${i*0.07}s"><span class="step-num">${i+1}</span><span>${s}</span></li>`)
       .join('');
 
-    body.innerHTML = `
-      <div class="call-label">Call ${data.call} — ${data.label}</div>
+    content.innerHTML = `
+      <div class="call-label">Call ${data.call}</div>
       <ul class="step-list">${stepsHtml}</ul>`;
+    window.location.hash = `help-${data.label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function closeDetail() {
+    const page = document.getElementById('detailPage');
+    const main = document.querySelector('.content');
+    page.classList.remove('active');
+    main.style.display = 'flex';
+    history.pushState('', document.title, window.location.pathname + window.location.search);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function callService(name, number) {
@@ -684,11 +758,6 @@
     t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 3000);
   }
-
-  /* ── KEYBOARD SHORTCUT ── */
-  document.getElementById('emergencyInput').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleGetHelp(); }
-  });
 
   /* Close modal on overlay click */
   document.getElementById('sosModal').addEventListener('click', function(e) {
