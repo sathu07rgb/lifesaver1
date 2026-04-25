@@ -401,6 +401,15 @@ function closeDetail() {
   const content = document.getElementById('detailContent');
   resultCard.classList.remove('active');
   content.classList.remove('active');
+  
+  // Restore placeholder content
+  content.innerHTML = `
+    <div class="result-placeholder">
+      <span class="placeholder-icon">📍</span>
+      <p id="resultPlaceholder">${translations[currentLanguage].resultPlaceholder}</p>
+    </div>
+  `;
+  
   window.location.href = 'index.html';
 }
 
