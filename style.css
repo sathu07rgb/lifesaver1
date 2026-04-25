@@ -271,7 +271,7 @@ a {
 
 .action-card.bleeding-card {
   background-image: linear-gradient(180deg, rgba(0,0,0,0.1), rgba(0,0,0,0.3)), url('assets/blood.jpg');
-  background-size: cover;
+  background-size: contain;
   background-position: center;
 }
 
@@ -279,18 +279,26 @@ a {
 
 .action-card.choking-card {
   background-image: linear-gradient(180deg, rgba(0,0,0,0.1), rgba(0,0,0,0.3)), url('assets/chock.jpeg');
+  background-size: contain;
+  background-position: center;
 }
 
 .action-card.faint-card {
   background-image: linear-gradient(180deg, rgba(0,0,0,0.1), rgba(0,0,0,0.3)), url('assets/faint.jpeg');
+  background-size: contain;
+  background-position: center;
 }
 
 .action-card.accident-card {
   background-image: linear-gradient(180deg, rgba(0,0,0,0.1), rgba(0,0,0,0.3)), url('assets/acc.jpeg');
+  background-size: contain;
+  background-position: center;
 }
 
 .action-card.burn-card {
   background-image: linear-gradient(180deg, rgba(0,0,0,0.1), rgba(0,0,0,0.3)), url('assets/burn.jpeg');
+  background-size: contain;
+  background-position: center;
 }
 
 .action-card:hover {
