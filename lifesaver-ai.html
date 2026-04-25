@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🚨 LifeSaver AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #0a0a0b;
+      --surface:    #111114;
+      --surface2:   #18181d;
+      --border:     #2a2a33;
+      --red:        #e8192c;
+      --red-dim:    #a01020;
+      --red-glow:   rgba(232, 25, 44, 0.35);
+      --red-faint:  rgba(232, 25, 44, 0.08);
+      --text:       #f0f0f2;
+      --text-sub:   #7a7a8a;
+      --text-muted: #44444f;
+      --amber:      #f5a623;
+      --green:      #22c55e;
+      --radius:     14px;
+      --radius-lg:  20px;
+      --mono:       'JetBrains Mono', monospace;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 0;
+    }
+
+    /* Subtle noise overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    .phone {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 420px;
+      min-height: 100dvh;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      padding: 0 0 32px;
+      overflow: hidden;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 22px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+    .topbar::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--red), transparent 60%);
+    }
+    .app-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32px;
+      letter-spacing: 2px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      line-height: 1;
+    }
+    .app-title .icon { font-size: 26px; animation: blink 1.4s step-end infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .tagline {
+      font-size: 12px;
+      color: var(--text-sub);
+      letter-spacing: 0.5px;
+      font-weight: 400;
+      font-family: var(--mono);
+    }
+    .status-dot {
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      margin-right: 6px;
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%,100%{box-shadow: 0 0 0 0 rgba(34,197,94,0.5)}
+      50%{box-shadow: 0 0 0 5px rgba(34,197,94,0)}
+    }
+
+    /* ── CONTENT ── */
+    .content { padding: 20px 18px; display: flex; flex-direction: column; gap: 18px; flex: 1; }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    /* ── INPUT SECTION ── */
+    .input-wrap { position: relative; }
+    .emergency-input {
+      width: 100%;
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      resize: none;
+      min-height: 80px;
+      line-height: 1.5;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    .emergency-input::placeholder { color: var(--text-muted); }
+    .emergency-input:focus {
+      border-color: var(--red-dim);
+      box-shadow: 0 0 0 3px var(--red-faint);
+    }
+
+    .get-help-btn {
+      width: 100%;
+      margin-top: 12px;
+      padding: 15px;
+      background: var(--red);
+      color: #fff;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 18px;
+      letter-spacing: 2px;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .get-help-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .get-help-btn:hover { background: #ff1f33; box-shadow: 0 4px 24px var(--red-glow); }
+    .get-help-btn:active { transform: scale(0.98); }
+
+    /* ── SOS SECTION ── */
+    .sos-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 24px 20px;
+    }
+    .sos-ring {
+      position: relative;
+      width: 130px;
+      height: 130px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .sos-ring::before, .sos-ring::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      background: var(--red-glow);
+      animation: sos-pulse 2s ease-out infinite;
+    }
+    .sos-ring::before { width: 100%; height: 100%; animation-delay: 0s; }
+    .sos-ring::after  { width: 115%; height: 115%; animation-delay: 0.6s; }
+    @keyframes sos-pulse {
+      0%   { transform: scale(0.9); opacity: 0.8; }
+      70%  { transform: scale(1.15); opacity: 0; }
+      100% { transform: scale(1.15); opacity: 0; }
+    }
+
+    .sos-btn {
+      position: relative; z-index: 2;
+      width: 110px; height: 110px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #ff3347, var(--red) 55%, #9a0010);
+      border: 3px solid rgba(255,255,255,0.12);
+      color: #fff;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 4px;
+      cursor: pointer;
+      box-shadow:
+        0 0 0 6px rgba(232,25,44,0.15),
+        0 8px 32px rgba(0,0,0,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.2);
+      transition: transform 0.15s, box-shadow 0.2s;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 2px;
+    }
+    .sos-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 0 8px rgba(232,25,44,0.25), 0 12px 40px rgba(232,25,44,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+    .sos-btn:active { transform: scale(0.96); }
+    .sos-sub { font-size: 9px; letter-spacing: 1px; opacity: 0.75; font-family: 'DM Sans', sans-serif; font-weight: 500; }
+
+    .sos-hint {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-family: var(--mono);
+      text-align: center;
+      letter-spacing: 0.3px;
+    }
+
+    /* ── EMERGENCY ACTIONS ── */
+    .actions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+    .action-btn {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 8px;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      transition: background 0.2s, border-color 0.2s, transform 0.1s, box-shadow 0.2s;
+      text-align: center;
+      line-height: 1.3;
+    }
+    .action-btn .a-icon { font-size: 22px; }
+    .action-btn .a-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--red);
+    }
+    .action-btn:hover {
+      border-color: var(--red-dim);
+      background: var(--red-faint);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+    .action-btn:active { transform: scale(0.96); }
+
+    /* ── RESULT CARD ── */
+    .result-card {
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+    }
+    .result-placeholder {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: var(--text-muted);
+      font-size: 13px;
+      padding: 16px 0 8px;
+    }
+    .result-placeholder .ph-icon { font-size: 28px; opacity: 0.4; }
+    .result-body { display: none; }
+    .result-body.visible { display: block; }
+
+    .step-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .step-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 12px 14px;
+      background: var(--surface2);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      font-size: 14px;
+      line-height: 1.5;
+      animation: fadeUp 0.35s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--red);
+      color: #fff;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 1px;
+    }
+    .call-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: var(--amber);
+      margin-bottom: 10px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .call-label::before {
+      content: '';
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--amber);
+      animation: pulse-dot 1.5s ease-in-out infinite;
+    }
+
+    /* ── SOS MODAL ── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--red);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      width: calc(100% - 40px);
+      max-width: 360px;
+      text-align: center;
+      transform: scale(0.92);
+      transition: transform 0.25s;
+    }
+    .modal-overlay.open .modal { transform: scale(1); }
+    .modal-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px;
+      letter-spacing: 2px;
+      color: var(--red);
+      margin-bottom: 8px;
+    }
+    .modal-body { font-size: 14px; color: var(--text-sub); line-height: 1.6; margin-bottom: 22px; }
+    .modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .modal-btn {
+      padding: 13px;
+      border-radius: var(--radius);
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+    .modal-btn:active { transform: scale(0.97); }
+    .modal-btn.cancel { background: var(--surface2); border: 1px solid var(--border); color: var(--text-sub); }
+    .modal-btn.confirm { background: var(--red); color: #fff; }
+    .modal-btn:hover { opacity: 0.85; }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--red);
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 13px;
+      color: var(--text);
+      white-space: nowrap;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 200;
+      font-family: var(--mono);
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media (min-width: 440px) {
+      .phone { border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+      body { padding: 24px 0; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<div class="phone">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="app-title"><span class="icon">🚨</span>LifeSaver AI</div>
+    <div class="tagline"><span class="status-dot"></span>Instant help in emergencies</div>
+  </header>
+
+  <div class="content">
+
+    <!-- INPUT SECTION -->
+    <div class="card">
+      <div class="card-label">⚡ Describe Emergency</div>
+      <div class="input-wrap">
+        <textarea
+          class="emergency-input"
+          id="emergencyInput"
+          placeholder="Describe emergency (e.g., bleeding, faint, choking…)"
+          rows="3"
+        ></textarea>
+      </div>
+      <button class="get-help-btn" id="getHelpBtn" onclick="handleGetHelp()">
+        GET HELP NOW
+      </button>
+    </div>
+
+    <!-- SOS SECTION -->
+    <div class="card sos-card">
+      <div class="card-label" style="text-align:center; margin-bottom:0;">⚠ Emergency SOS</div>
+      <div class="sos-ring">
+        <button class="sos-btn" onclick="openSosModal()">
+          SOS
+          <span class="sos-sub">PRESS &amp; HOLD</span>
+        </button>
+      </div>
+      <p class="sos-hint">Tap to trigger emergency alert to all services</p>
+    </div>
+
+    <!-- QUICK CALL BUTTONS -->
+    <div class="card" style="padding:18px;">
+      <div class="card-label">📡 Quick Dial</div>
+      <div class="actions-grid">
+        <button class="action-btn" onclick="callService('Ambulance', '108')">
+          <span class="a-icon">📞</span>
+          <span>Ambulance</span>
+          <span class="a-num">108</span>
+        </button>
+        <button class="action-btn" onclick="callService('Police', '100')">
+          <span class="a-icon">🚓</span>
+          <span>Police</span>
+          <span class="a-num">100</span>
+        </button>
+        <button class="action-btn" onclick="callService('Fire Dept', '101')">
+          <span class="a-icon">🚒</span>
+          <span>Fire Dept</span>
+          <span class="a-num">101</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- RESULT SECTION -->
+    <div class="card result-card" id="resultCard">
+      <div class="card-label">🩺 First Aid Guide</div>
+      <div class="result-placeholder" id="resultPlaceholder">
+        <span class="ph-icon">📋</span>
+        <span>Describe an emergency above<br>to get step-by-step guidance</span>
+      </div>
+      <div class="result-body" id="resultBody"></div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /phone -->
+
+<!-- SOS MODAL -->
+<div class="modal-overlay" id="sosModal">
+  <div class="modal">
+    <div class="modal-title">🚨 SOS Activated</div>
+    <p class="modal-body">
+      This will alert <strong>all emergency services</strong> to your location.<br>
+      Only proceed in a real emergency.
+    </p>
+    <div class="modal-actions">
+      <button class="modal-btn cancel" onclick="closeSosModal()">Cancel</button>
+      <button class="modal-btn confirm" onclick="confirmSos()">SEND SOS</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  /* ── DATA ── */
+  const firstAidData = {
+    bleeding: {
+      label: "🩸 Severe Bleeding",
+      call: "108",
+      steps: [
+        "Apply firm, direct pressure using a clean cloth or bandage.",
+        "Do NOT remove the cloth if it soaks through — add more on top.",
+        "Elevate the injured limb above heart level if possible.",
+        "If bleeding doesn't stop in 10 mins, call 108 immediately.",
+        "Watch for signs of shock: pale skin, rapid breathing, dizziness."
+      ]
+    },
+    faint: {
+      label: "😵 Fainting / Unconscious",
+      call: "108",
+      steps: [
+        "Lay the person flat on their back on a safe surface.",
+        "Loosen tight clothing around neck and chest.",
+        "Lift legs about 12 inches to restore blood flow to brain.",
+        "Check for breathing — if absent, begin CPR.",
+        "If they don't regain consciousness in 1 minute, call 108."
+      ]
+    },
+    choking: {
+      label: "😮‍💨 Choking",
+      call: "108",
+      steps: [
+        "Ask: 'Are you choking?' — if they can't speak, act immediately.",
+        "Give 5 firm back blows between shoulder blades with heel of hand.",
+        "Perform 5 abdominal thrusts (Heimlich maneuver) — push inward & upward.",
+        "Alternate back blows and abdominal thrusts until object is dislodged.",
+        "If person loses consciousness, call 108 and start CPR."
+      ]
+    },
+    burn: {
+      label: "🔥 Burns",
+      call: "108",
+      steps: [
+        "Cool the burn under cool (not cold) running water for 10–20 minutes.",
+        "Do NOT use ice, butter, or toothpaste — these worsen damage.",
+        "Remove jewelry near the burn before swelling starts.",
+        "Cover loosely with a sterile, non-fluffy bandage or cling film.",
+        "For burns larger than hand size or on face/hands/joints, call 108."
+      ]
+    },
+    heart: {
+      label: "❤️ Heart Attack",
+      call: "108",
+      steps: [
+        "Call 108 immediately — every second counts.",
+        "Have the person sit or lie down in the position most comfortable.",
+        "Loosen tight clothing, especially around the chest.",
+        "If aspirin is available and no allergy, give 300mg to chew slowly.",
+        "If person loses consciousness and stops breathing, begin CPR."
+      ]
+    },
+    cpr: {
+      label: "💓 CPR Required",
+      call: "108",
+      steps: [
+        "Check scene safety, then tap and shout to check responsiveness.",
+        "Call 108 (or ask someone to) before starting CPR.",
+        "Place heel of hand on center of chest, interlock both hands.",
+        "Push hard and fast — 30 compressions at 100–120 per minute, 2 inches deep.",
+        "Give 2 rescue breaths after every 30 compressions. Repeat until help arrives."
+      ]
+    },
+    fracture: {
+      label: "🦴 Fracture / Broken Bone",
+      call: "108",
+      steps: [
+        "Do NOT attempt to straighten or realign the bone.",
+        "Immobilize the injured area using a splint or padding.",
+        "Apply ice pack wrapped in cloth to reduce swelling — 20 min on/off.",
+        "Keep the injured person still and calm; do not let them bear weight.",
+        "If the bone pierces skin or it's a spine injury, call 108 immediately."
+      ]
+    },
+    stroke: {
+      label: "🧠 Stroke (FAST)",
+      call: "108",
+      steps: [
+        "FACE: Ask to smile — is one side drooping?",
+        "ARMS: Ask to raise both arms — does one drift down?",
+        "SPEECH: Ask to repeat a phrase — is it slurred or strange?",
+        "TIME: If any signs present, call 108 immediately — time is critical.",
+        "Keep person calm, do not give food or water, note the time of symptoms."
+      ]
+    }
+  };
+
+  const keywords = {
+    bleed: 'bleeding', blood: 'bleeding', wound: 'bleeding', cut: 'bleeding',
+    faint: 'faint', unconscious: 'faint', collapse: 'faint', dizzy: 'faint', pass: 'faint',
+    chok: 'choking', airway: 'choking',
+    burn: 'burn', fire: 'burn', scald: 'burn',
+    heart: 'heart', chest: 'heart', cardiac: 'heart',
+    cpr: 'cpr', resuscit: 'cpr', breathing: 'cpr', not breathing: 'cpr',
+    fractur: 'fracture', broken: 'fracture', bone: 'fracture', break: 'fracture',
+    stroke: 'stroke', paralys: 'stroke', speech: 'stroke', facial: 'stroke'
+  };
+
+  /* ── HANDLERS ── */
+  function handleGetHelp() {
+    const input = document.getElementById('emergencyInput').value.trim().toLowerCase();
+    if (!input) { showToast('⚠ Please describe the emergency first.'); return; }
+
+    let matched = null;
+    for (const [kw, type] of Object.entries(keywords)) {
+      if (input.includes(kw)) { matched = type; break; }
+    }
+
+    if (!matched) {
+      showResult(null, input);
+    } else {
+      showResult(firstAidData[matched]);
+    }
+  }
+
+  function showResult(data, rawInput) {
+    const ph    = document.getElementById('resultPlaceholder');
+    const body  = document.getElementById('resultBody');
+    ph.style.display = 'none';
+    body.classList.add('visible');
+
+    if (!data) {
+      body.innerHTML = `
+        <div class="call-label">General Advice</div>
+        <ul class="step-list">
+          ${['Stay calm and keep the person reassured.', 'Call 108 if the situation seems serious or worsening.', 'Keep the person still and comfortable until help arrives.', 'Do not give food or water unless absolutely necessary.', 'Monitor breathing and pulse continuously.']
+            .map((s, i) => `<li class="step-item" style="animation-delay:${i*0.07}s"><span class="step-num">${i+1}</span><span>${s}</span></li>`)
+            .join('')}
+        </ul>`;
+      return;
+    }
+
+    const stepsHtml = data.steps
+      .map((s, i) => `<li class="step-item" style="animation-delay:${i*0.07}s"><span class="step-num">${i+1}</span><span>${s}</span></li>`)
+      .join('');
+
+    body.innerHTML = `
+      <div class="call-label">Call ${data.call} — ${data.label}</div>
+      <ul class="step-list">${stepsHtml}</ul>`;
+  }
+
+  function callService(name, number) {
+    window.location.href = `tel:${number}`;
+    showToast(`📞 Calling ${name} — ${number}`);
+  }
+
+  function openSosModal()  { document.getElementById('sosModal').classList.add('open'); }
+  function closeSosModal() { document.getElementById('sosModal').classList.remove('open'); }
+
+  function confirmSos() {
+    closeSosModal();
+    showToast('🚨 SOS sent — help is on the way!');
+    window.location.href = 'tel:112';
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  /* ── KEYBOARD SHORTCUT ── */
+  document.getElementById('emergencyInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleGetHelp(); }
+  });
+
+  /* Close modal on overlay click */
+  document.getElementById('sosModal').addEventListener('click', function(e) {
+    if (e.target === this) closeSosModal();
+  });
+</script>
+</body>
+</html>
