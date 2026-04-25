@@ -15,30 +15,35 @@
       <div class="brand">
         <div class="brand-mark">🚨</div>
         <div>
-          <span class="brand-name">LifeSaver AI</span>
-          <span class="brand-tag">Emergency care dashboard</span>
+          <span class="brand-name" id="brandName">LifeSaver AI</span>
+          <span class="brand-tag" id="brandTag">Emergency care dashboard</span>
         </div>
       </div>
       <nav class="nav-links">
-        <a href="#home">Home</a>
+        <a href="#home" id="navHome">Home</a>
+        <select id="languageSelector" onchange="changeLanguage(this.value)" class="lang-select">
+          <option value="en">English</option>
+          <option value="hi">हिंदी</option>
+          <option value="kn">ಕನ್ನಡ</option>
+        </select>
       </nav>
-      <button class="btn btn-sos-nav" type="button" onclick="openSosModal()">SOS Call</button>
+      <button class="btn btn-sos-nav" type="button" onclick="openSosModal()" id="navSosBtn">SOS Call</button>
     </header>
 
     <main>
       <section class="hero">
         <div class="hero-overlay"></div>
         <div class="hero-copy">
-          <span class="eyebrow">Emergency response made effortless</span>
-          <h1>Fast Help. When It Matters Most.</h1>
-          <p class="hero-text">
+          <span class="eyebrow" id="heroEyebrow">Emergency response made effortless</span>
+          <h1 id="heroTitle">Fast Help. When It Matters Most.</h1>
+          <p class="hero-text" id="heroText">
             One-tap guidance, instant SOS support, and nearby help right from your phone.
             Whether it's bleeding, choking, burns, or an urgent accident, LifeSaver AI has your back.
           </p>
           <div class="hero-actions">
-            <button class="btn btn-emergency hero-btn" type="button" onclick="window.open('emergency.html', '_blank')">Emergency Response</button>
-            <button class="btn btn-sos hero-btn" type="button" onclick="openSosModal()">🔴 Emergency SOS</button>
-            <button class="btn btn-secondary hero-btn" type="button" onclick="findHospitals()">📍 Find Nearby Hospitals</button>
+            <button class="btn btn-emergency hero-btn" type="button" onclick="window.open('emergency.html', '_blank')" id="heroEmergencyBtn">Emergency Response</button>
+            <button class="btn btn-sos hero-btn" type="button" onclick="openSosModal()" id="heroSosBtn">🔴 Emergency SOS</button>
+            <button class="btn btn-secondary hero-btn" type="button" onclick="findHospitals()" id="heroHospitalBtn">📍 Find Nearby Hospitals</button>
           </div>
         </div>
       </section>
@@ -47,21 +52,21 @@
         <div class="card-grid">
           <div class="mini-card ambulance-card">
             <span class="mini-icon">📞</span>
-            <h3>Ambulance</h3>
+            <h3 id="ambulanceTitle">Ambulance</h3>
             <p>108</p>
-            <button class="btn btn-small" type="button" onclick="callService('Ambulance', '108')">Call</button>
+            <button class="btn btn-small" type="button" onclick="callService('ambulanceTitle', '108')" id="ambulanceBtn">Call</button>
           </div>
           <div class="mini-card police-card">
             <span class="mini-icon">🚓</span>
-            <h3>Police</h3>
+            <h3 id="policeTitle">Police</h3>
             <p>100</p>
-            <button class="btn btn-small" type="button" onclick="callService('Police', '100')">Call</button>
+            <button class="btn btn-small" type="button" onclick="callService('policeTitle', '100')" id="policeBtn">Call</button>
           </div>
           <div class="mini-card fire-card">
             <span class="mini-icon">🚒</span>
-            <h3>Fire Dept</h3>
+            <h3 id="fireTitle">Fire Dept</h3>
             <p>101</p>
-            <button class="btn btn-small" type="button" onclick="callService('Fire Dept', '101')">Call</button>
+            <button class="btn btn-small" type="button" onclick="callService('fireTitle', '101')" id="fireBtn">Call</button>
           </div>
         </div>
       </section>
@@ -70,14 +75,14 @@
 
   <div class="modal-overlay" id="sosModal">
     <div class="modal">
-      <div class="modal-title">🚨 SOS Activated</div>
-      <p class="modal-body">
+      <div class="modal-title" id="sosModalTitle">🚨 SOS Activated</div>
+      <p class="modal-body" id="sosModalBody">
         This will alert <strong>all emergency services</strong> to your location.
         Only proceed in a real emergency.
       </p>
       <div class="modal-actions">
-        <button class="modal-btn cancel" type="button" onclick="closeSosModal()">Cancel</button>
-        <button class="modal-btn confirm" type="button" onclick="confirmSos()">SEND SOS</button>
+        <button class="modal-btn cancel" type="button" onclick="closeSosModal()" id="sosCancelBtn">Cancel</button>
+        <button class="modal-btn confirm" type="button" onclick="confirmSos()" id="sosSendBtn">SEND SOS</button>
       </div>
     </div>
   </div>

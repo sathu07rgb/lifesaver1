@@ -15,68 +15,73 @@
       <div class="brand">
         <div class="brand-mark">🚨</div>
         <div>
-          <span class="brand-name">LifeSaver AI</span>
-          <span class="brand-tag">Emergency care dashboard</span>
+          <span class="brand-name" id="brandName">LifeSaver AI</span>
+          <span class="brand-tag" id="brandTag">Emergency care dashboard</span>
         </div>
       </div>
       <nav class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="#first-aid">First Aid</a>
-        <a href="#hospitals">Hospitals</a>
-        <a href="#contact">Contact</a>
+        <a href="index.html" id="navHome">Home</a>
+        <a href="#first-aid" id="navFirstAid">First Aid</a>
+        <a href="#hospitals" id="navHospitals">Hospitals</a>
+        <a href="#contact" id="navContact">Contact</a>
+        <select id="languageSelector" onchange="changeLanguage(this.value)" class="lang-select">
+          <option value="en">English</option>
+          <option value="hi">हिंदी</option>
+          <option value="kn">ಕನ್ನಡ</option>
+        </select>
       </nav>
-      <button class="btn btn-sos-nav" type="button" onclick="openSosModal()">SOS Call</button>
+      <button class="btn btn-sos-nav" type="button" onclick="openSosModal()" id="navSosBtn">SOS Call</button>
     </header>
 
     <main>
       <section class="section-block quick-actions" id="first-aid">
         <div class="section-header">
-          <span class="section-label">Emergency Response</span>
-          <h2>Immediate first aid actions</h2>
-          <p>Tap any situation below to get immediate first aid steps and emergency guidance.</p>
+          <span class="section-label" id="sectionLabel">Emergency Response</span>
+          <h2 id="sectionTitle">Immediate first aid actions</h2>
+          <p id="sectionDesc">Tap any situation below to get immediate first aid steps and emergency guidance.</p>
         </div>
         <div class="card-grid">
           <button class="action-card bleeding-card" type="button" onclick="getHelp('bleeding')">
-            <strong>Bleeding</strong>
-            <p>Fast first aid steps for severe bleeding.</p>
+            <strong id="bleedingTitle">Bleeding</strong>
+            <p id="bleedingDesc">Fast first aid steps for severe bleeding.</p>
           </button>
           <button class="action-card choking-card" type="button" onclick="getHelp('choking')">
-            <strong>Choking</strong>
-            <p>Clear airways and get help quickly.</p>
+            <strong id="chokingTitle">Choking</strong>
+            <p id="chokingDesc">Clear airways and get help quickly.</p>
           </button>
           <button class="action-card faint-card" type="button" onclick="getHelp('faint')">
-            <strong>Fainted</strong>
-            <p>Stabilize and monitor unconscious people.</p>
+            <strong id="faintTitle">Fainted</strong>
+            <p id="faintDesc">Stabilize and monitor unconscious people.</p>
           </button>
           <button class="action-card burn-card" type="button" onclick="getHelp('burn')">
-            <strong>Burn</strong>
-            <p>Cool and protect burn injuries safely.</p>
+            <strong id="burnTitle">Burn</strong>
+            <p id="burnDesc">Cool and protect burn injuries safely.</p>
           </button>
           <button class="action-card accident-card" type="button" onclick="getHelp('accident')">
-            <strong>Accident</strong>
-            <p>Manage trauma until help arrives.</p>
+            <strong id="accidentTitle">Accident</strong>
+            <p id="accidentDesc">Manage trauma until help arrives.</p>
           </button>
         </div>
       </section>
 
       <section class="section-block result-display" id="contact">
         <div class="section-header">
-          <span class="section-label">Result Display</span>
-          <h2>Emergency guidance panel</h2>
-          <p>Detailed advice appears here once you choose an emergency action.</p>
+          <span class="section-label" id="resultLabel">Result Display</span>
+          <h2 id="resultTitle">Emergency guidance panel</h2>
+          <p id="resultDesc">Detailed advice appears here once you choose an emergency action.</p>
         </div>
         <div class="result-card">
           <div class="result-top">
             <div>
               <h3 id="detailHeading">Ready for your first aid action</h3>
-              <p class="result-sub">Select Bleeding, Choking, Fainted, Burn, or Accident above.</p>
+              <p class="result-sub" id="detailSub">Select Bleeding, Choking, Fainted, Burn, or Accident above.</p>
             </div>
-            <button class="btn btn-close" type="button" onclick="closeDetail()">Close</button>
+            <button class="btn btn-close" type="button" onclick="closeDetail()" id="resultCloseBtn">Close</button>
           </div>
           <div id="detailContent" class="result-content">
             <div class="result-placeholder">
               <span class="placeholder-icon">📍</span>
-              <p>Choose an emergency to see step-by-step instructions and call information.</p>
+              <p id="resultPlaceholder">Choose an emergency to see step-by-step instructions and call information.</p>
             </div>
           </div>
         </div>
@@ -86,14 +91,14 @@
 
   <div class="modal-overlay" id="sosModal">
     <div class="modal">
-      <div class="modal-title">🚨 SOS Activated</div>
-      <p class="modal-body">
+      <div class="modal-title" id="sosModalTitle">🚨 SOS Activated</div>
+      <p class="modal-body" id="sosModalBody">
         This will alert <strong>all emergency services</strong> to your location.
         Only proceed in a real emergency.
       </p>
       <div class="modal-actions">
-        <button class="modal-btn cancel" type="button" onclick="closeSosModal()">Cancel</button>
-        <button class="modal-btn confirm" type="button" onclick="confirmSos()">SEND SOS</button>
+        <button class="modal-btn cancel" type="button" onclick="closeSosModal()" id="sosCancelBtn">Cancel</button>
+        <button class="modal-btn confirm" type="button" onclick="confirmSos()" id="sosSendBtn">SEND SOS</button>
       </div>
     </div>
   </div>
