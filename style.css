@@ -270,7 +270,7 @@ a {
 }
 
 .action-card.bleeding-card {
-  background-image: linear-gradient(180deg, rgba(0,0,0,0.30), rgba(0,0,0,0.55)), url('assets/blood.jpg');
+  background-image: linear-gradient(180deg, rgba(0,0,0,0.1), rgba(0,0,0,0.3)), url('assets/blood.jpg');
   background-size: cover;
   background-position: center;
 }
@@ -291,19 +291,19 @@ a {
 }
 
 .action-card.choking-card {
-  background-image: linear-gradient(180deg, rgba(0,0,0,0.30), rgba(0,0,0,0.55)), url('assets/chock.jpeg');
+  background-image: linear-gradient(180deg, rgba(0,0,0,0.1), rgba(0,0,0,0.3)), url('assets/chock.jpeg');
 }
 
 .action-card.faint-card {
-  background-image: linear-gradient(180deg, rgba(0,0,0,0.30), rgba(0,0,0,0.55)), url('assets/faint.jpeg');
+  background-image: linear-gradient(180deg, rgba(0,0,0,0.1), rgba(0,0,0,0.3)), url('assets/faint.jpeg');
 }
 
 .action-card.accident-card {
-  background-image: linear-gradient(180deg, rgba(0,0,0,0.30), rgba(0,0,0,0.55)), url('assets/acc.jpeg');
+  background-image: linear-gradient(180deg, rgba(0,0,0,0.1), rgba(0,0,0,0.3)), url('assets/acc.jpeg');
 }
 
 .action-card.burn-card {
-  background-image: linear-gradient(180deg, rgba(0,0,0,0.30), rgba(0,0,0,0.55)), url('assets/burn.jpeg');
+  background-image: linear-gradient(180deg, rgba(0,0,0,0.1), rgba(0,0,0,0.3)), url('assets/burn.jpeg');
 }
 
 .action-card:hover {
@@ -524,21 +524,21 @@ a {
 }
 
 .mini-card.ambulance-card {
-  background-image: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.55)), url('assets/ambulance.jpg');
+  background-image: linear-gradient(180deg, rgba(0,0,0,0.1), rgba(0,0,0,0.3)), url('assets/ambulance.jpg');
   background-size: cover;
   background-position: center;
   color: #fff;
 }
 
 .mini-card.police-card {
-  background-image: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.55)), url('assets/police.jpg');
+  background-image: linear-gradient(180deg, rgba(0,0,0,0.1), rgba(0,0,0,0.3)), url('assets/police.jpg');
   background-size: cover;
   background-position: center;
   color: #fff;
 }
 
 .mini-card.fire-card {
-  background-image: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.55)), url('assets/fire.jpg');
+  background-image: linear-gradient(180deg, rgba(0,0,0,0.1), rgba(0,0,0,0.3)), url('assets/fire.jpg');
   background-size: cover;
   background-position: center;
   color: #fff;
@@ -550,7 +550,7 @@ a {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(0, 0, 0, 0.2);
   pointer-events: none;
 }
 
