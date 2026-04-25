@@ -366,6 +366,10 @@
         resultDiv.style.opacity = '1';
         resultDiv.style.transform = 'translateY(0)';
       }, 30);
+      
+      if (typeof suggestNearbyHospitals === 'function') {
+        suggestNearbyHospitals(resultDiv.querySelector('.res-card'));
+      }
     }
 
 

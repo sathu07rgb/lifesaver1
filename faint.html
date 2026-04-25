@@ -368,10 +368,10 @@
         <div class="question-box">
           <h3 class="question-title">Is the person breathing?</h3>
           <div class="btn-group">
-            <button class="btn-yes" onclick="analyzeFaint(true)">
+            <button class="btn-yes" onclick="handleFaint('yes')">
               <span>✅</span> Yes
             </button>
-            <button class="btn-no" onclick="analyzeFaint(false)">
+            <button class="btn-no" onclick="handleFaint('no')">
               <span>❌</span> No
             </button>
           </div>
@@ -432,92 +432,78 @@
 
   <script src="script.js"></script>
   <script>
-    // ── Main analysis function ──
-    function analyzeFaint(isBreathing) {
-      const result = document.getElementById('result');
-
-      // Clear the current result and show loading state
+    function handleFaint(answer) {
+      const result = document.getElementById("result");
+      
       result.innerHTML = `
         <div class="analyzing-state">
           <div class="spinner"></div>
-          <span>Analyzing condition...</span>
+          <span>Analyzing...</span>
         </div>`;
       
-      // Remove any existing animation
       result.style.opacity = '1';
       result.style.transform = 'translateY(0)';
 
       setTimeout(() => {
-        if (isBreathing) {
-          showBreathing(result);
+        if (answer === "yes") {
+          result.innerHTML = `
+            <div class="res-card res-safe">
+              <div class="res-header">
+                <span class="res-icon">✅</span>
+                <div>
+                  <h3 class="res-title">Person is breathing</h3>
+                  <span class="res-badge res-badge-safe">STABLE</span>
+                </div>
+              </div>
+              <div class="res-steps-wrap">
+                <ol class="res-steps">
+                  <li><span>Lay person flat</span></li>
+                  <li><span>Raise legs</span></li>
+                  <li><span>Loosen tight clothing</span></li>
+                  <li><span>Place in recovery position</span></li>
+                  <li><span>Stay until conscious</span></li>
+                </ol>
+              </div>
+            </div>
+          `;
         } else {
-          showNotBreathing(result);
+          result.innerHTML = `
+            <div class="res-card res-danger">
+              <div class="res-header">
+                <span class="res-icon">🚨</span>
+                <div>
+                  <h3 class="res-title">Critical Condition</h3>
+                  <span class="res-badge res-badge-danger">LIFE THREATENING</span>
+                </div>
+              </div>
+              <div class="res-emergency">
+                <div class="res-em-pulse"></div>
+                <div class="res-em-text">
+                  <strong>📞 Call Ambulance Immediately</strong>
+                  <span>108</span>
+                </div>
+                <a href="tel:108" class="res-call-btn">📞 108</a>
+              </div>
+              <div class="res-steps-wrap">
+                <ol class="res-steps">
+                  <li><span>Start CPR immediately</span></li>
+                  <li><span>Give chest compressions</span></li>
+                  <li><span>Check breathing</span></li>
+                  <li><span>Continue until help arrives</span></li>
+                </ol>
+              </div>
+            </div>
+          `;
+        }
+        
+        animateIn(result);
+        
+        if (typeof suggestNearbyHospitals === 'function') {
+          setTimeout(() => {
+            suggestNearbyHospitals(result.querySelector('.res-card'));
+          }, 400); // Wait for animateIn to finish
         }
       }, 1000);
-    }
-
-    // ── Safe / Breathing state ──
-    function showBreathing(resultDiv) {
-      resultDiv.innerHTML = `
-        <div class="res-card res-safe">
-          <div class="res-header">
-            <span class="res-icon">✅</span>
-            <div>
-              <h3 class="res-title">Person is breathing</h3>
-              <span class="res-badge res-badge-safe">STABLE</span>
-            </div>
-          </div>
-
-          <p class="res-desc">The person is unconscious but breathing normally. Follow these steps to keep their airway clear and monitor them.</p>
-
-          <div class="res-steps-wrap">
-            <h4>📋 Care Steps</h4>
-            <ol class="res-steps">
-              <li><span><strong>Lay flat:</strong> Ensure the person is lying comfortably on their back.</span></li>
-              <li><span><strong>Raise legs:</strong> Elevate their legs about 12 inches above their heart level if possible.</span></li>
-              <li><span><strong>Loosen clothing:</strong> Loosen any tight clothing around their neck or waist.</span></li>
-              <li><span><strong>Recovery position:</strong> If they might vomit or remain unconscious, place them in the recovery position (see quick reference below).</span></li>
-              <li><span><strong>Stay until conscious:</strong> Monitor them continuously. Call 108 if they don't wake up quickly.</span></li>
-            </ol>
-          </div>
-        </div>`;
-      animateIn(resultDiv);
-    }
-
-    // ── Danger / Not Breathing state ──
-    function showNotBreathing(resultDiv) {
-      resultDiv.innerHTML = `
-        <div class="res-card res-danger">
-          <div class="res-header">
-            <span class="res-icon">🚨</span>
-            <div>
-              <h3 class="res-title">Critical Condition</h3>
-              <span class="res-badge res-badge-danger">LIFE THREATENING</span>
-            </div>
-          </div>
-
-          <div class="res-emergency">
-            <div class="res-em-pulse"></div>
-            <div class="res-em-text">
-              <strong>📞 Call Ambulance Immediately</strong>
-              <span>Start CPR immediately after calling</span>
-            </div>
-            <a href="tel:108" class="res-call-btn">📞 108</a>
-          </div>
-
-          <p class="res-desc">The person is not breathing normally. The heart may have stopped. Act immediately!</p>
-
-          <div class="res-steps-wrap">
-            <h4>📋 Emergency CPR Procedure</h4>
-            <ol class="res-steps">
-              <li><span><strong>Start CPR:</strong> Kneel next to the person's chest.</span></li>
-              <li><span><strong>Hand position:</strong> Place the heel of one hand in the center of their chest, place your other hand on top and interlock fingers.</span></li>
-              <li><span><strong>Chest compressions:</strong> Push hard and fast (at least 2 inches deep, 100-120 beats per minute).</span></li>
-              <li><span><strong>Continue:</strong> Do not stop compressions until emergency help arrives and takes over, or the person starts breathing normally.</span></li>
-            </ol>
-          </div>
-        </div>`;
-      animateIn(resultDiv);
     }
 
     // ── Fade-in animation ──

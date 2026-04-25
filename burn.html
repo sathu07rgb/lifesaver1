@@ -505,6 +505,12 @@
           </div>`;
       }
       animateIn(resultDiv);
+      
+      if (typeof suggestNearbyHospitals === 'function') {
+        setTimeout(() => {
+          suggestNearbyHospitals(resultDiv.querySelector('.res-card'));
+        }, 400); // Wait for animateIn to finish
+      }
     }
 
     // ── Camera functionality ──
