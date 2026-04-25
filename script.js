@@ -348,61 +348,155 @@ function getFirstAidSteps(type) {
 }
 
 function getHelp(type) {
-  const data = firstAidData[type];
-  if (!data) {
-    showToast('⚠ Unable to find guidance for that emergency.');
-    showResult(null);
-    return;
-  }
-  showResult(data);
-}
-
-function showResult(data) {
-  const heading = document.getElementById('detailHeading');
+  console.log('getHelp called with type:', type);
+  
+  // Show loading state
   const content = document.getElementById('detailContent');
+  const heading = document.getElementById('detailHeading');
   const resultCard = document.querySelector('.result-card');
+  
+  heading.textContent = 'Loading...';
+  content.innerHTML = '<div class="result-placeholder"><p>Loading emergency guidance...</p></div>';
   resultCard.classList.add('active');
   content.classList.add('active');
 
-  if (!data) {
-    heading.textContent = translations[currentLanguage].detailHeading;
-    content.innerHTML = `
-      <div class="call-label">${translations[currentLanguage].callLabel}</div>
-      <ul class="step-list">
-        ${[translations[currentLanguage].sectionDesc].map((text, index) => `<li class="step-item" style="animation-delay:${index * 0.05}s"><span>${index + 1}</span><span>${text}</span></li>`).join('')}
-      </ul>
-    `;
-    window.location.hash = 'help';
-    window.scrollTo({ top: document.querySelector('.result-display')?.offsetTop - 20 || 0, behavior: 'smooth' });
+  // Fetch from API
+  fetch(`http://localhost:3000/help?type=${type}`)
+    .then(response => {
+      console.log('API response status:', response.status);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('API response data:', data);
+      showResult(data, type);
+    })
+    .catch(error => {
+      console.error('API fetch failed:', error);
+      // Fallback to dummy data
+      const dummyData = getDummyData(type);
+      if (dummyData) {
+        showResult(dummyData, type);
+      } else {
+        showError('Server error - unable to load guidance');
+      }
+    });
+}
+
+// Dummy data fallback
+function getDummyData(type) {
+  const dummyResponses = {
+    bleeding: {
+      label: 'Severe Bleeding',
+      call: '108',
+      steps: [
+        'Apply firm, direct pressure using a clean cloth or bandage.',
+        'Do NOT remove the cloth if it soaks through — add more on top.',
+        'Elevate the injured limb above heart level if possible.',
+        'If bleeding doesn\'t stop in 10 mins, call 108 immediately.',
+        'Watch for signs of shock: pale skin, rapid breathing, dizziness.'
+      ]
+    },
+    choking: {
+      label: 'Choking',
+      call: '108',
+      steps: [
+        'Ask: \'Are you choking?\' — if they can\'t speak, act immediately.',
+        'Give 5 firm back blows between shoulder blades with heel of hand.',
+        'Perform 5 abdominal thrusts (Heimlich maneuver) — push inward & upward.',
+        'Alternate back blows and abdominal thrusts until object is dislodged.',
+        'If person loses consciousness, call 108 and start CPR.'
+      ]
+    },
+    faint: {
+      label: 'Fainting / Unconscious',
+      call: '108',
+      steps: [
+        'Lay the person flat on their back on a safe surface.',
+        'Loosen tight clothing around neck and chest.',
+        'Lift legs about 12 inches to restore blood flow to brain.',
+        'Check for breathing — if absent, begin CPR.',
+        'If they don\'t regain consciousness in 1 minute, call 108.'
+      ]
+    },
+    burn: {
+      label: 'Burns',
+      call: '108',
+      steps: [
+        'Cool the burn under cool (not cold) running water for 10–20 minutes.',
+        'Do NOT use ice, butter, or toothpaste — these worsen damage.',
+        'Remove jewelry near the burn before swelling starts.',
+        'Cover loosely with a sterile, non-fluffy bandage or cling film.',
+        'For burns larger than hand size or on face/hands/joints, call 108.'
+      ]
+    },
+    accident: {
+      label: 'General Accident Response',
+      call: '108',
+      steps: [
+        'Ensure the scene is safe before approaching the injured person.',
+        'Stop any major bleeding by applying firm pressure with a clean cloth.',
+        'Keep the injured area still and supported; do not move them unless unsafe.',
+        'Cover with a blanket to prevent shock and keep them calm.',
+        'Call 108 immediately for serious injuries, broken bones, or heavy bleeding.'
+      ]
+    }
+  };
+  
+  return dummyResponses[type] || null;
+}
+
+function showResult(data, type) {
+  const heading = document.getElementById('detailHeading');
+  const content = document.getElementById('detailContent');
+  const resultCard = document.querySelector('.result-card');
+  
+  if (!data || !data.steps || data.steps.length === 0) {
+    showError('No data found for this emergency type');
     return;
   }
 
-  const label = getFirstAidLabel(type);
-  const steps = getFirstAidSteps(type);
-
-  heading.textContent = label;
+  heading.textContent = data.label || `Emergency: ${type}`;
 
   content.innerHTML = `
-    <div class="call-label">${translations[currentLanguage].callLabel} ${data.call}</div>
+    <div class="call-label">Call ${data.call || 'Emergency Services'}</div>
     <ul class="step-list">
-      ${steps.map((step, index) => `<li class="step-item" style="animation-delay:${index * 0.05}s"><span>${index + 1}</span><span>${step}</span></li>`).join('')}
+      ${data.steps.map((step, index) => `<li class="step-item" style="animation-delay:${index * 0.05}s"><span>${index + 1}</span><span>${step}</span></li>`).join('')}
     </ul>
   `;
 
-  window.location.hash = `help-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+  window.location.hash = `help-${type}`;
   const resultDisplay = document.querySelector('.result-display');
   if (resultDisplay) {
     window.scrollTo({ top: resultDisplay.offsetTop - 20, behavior: 'smooth' });
   }
 }
 
+function showError(message) {
+  const heading = document.getElementById('detailHeading');
+  const content = document.getElementById('detailContent');
+  
+  heading.textContent = 'Error';
+  content.innerHTML = `
+    <div class="result-placeholder">
+      <span class="placeholder-icon">⚠️</span>
+      <p>${message}</p>
+    </div>
+  `;
+}
+
 function closeDetail() {
   const resultCard = document.querySelector('.result-card');
   const content = document.getElementById('detailContent');
+  const heading = document.getElementById('detailHeading');
+  
   resultCard.classList.remove('active');
   content.classList.remove('active');
   
   // Restore placeholder content
+  heading.textContent = translations[currentLanguage].detailHeading;
   content.innerHTML = `
     <div class="result-placeholder">
       <span class="placeholder-icon">📍</span>

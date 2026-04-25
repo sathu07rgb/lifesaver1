@@ -1,0 +1,13 @@
+{
+  "name": "lifesaver-api",
+  "version": "1.0.0",
+  "description": "API server for LifeSaver AI emergency guidance",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["emergency", "first-aid", "api"],
+  "author": "",
+  "license": "MIT"
+}
