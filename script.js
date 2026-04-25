@@ -150,3 +150,12 @@ sosModal.addEventListener('click', function (event) {
     closeSosModal();
   }
 });
+
+// Check for URL parameter on page load
+window.addEventListener('DOMContentLoaded', function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const type = urlParams.get('type');
+  if (type) {
+    getHelp(type);
+  }
+});

@@ -53,27 +53,27 @@
           <p>Tap any situation below to get immediate first aid steps and emergency guidance.</p>
         </div>
         <div class="card-grid">
-          <button class="action-card" type="button" onclick="getHelp('bleeding')">
+          <button class="action-card" type="button" onclick="window.open('emergency.html?type=bleeding', '_blank')">
             <span class="card-emoji">🩸</span>
             <strong>Bleeding</strong>
             <p>Fast first aid steps for severe bleeding.</p>
           </button>
-          <button class="action-card" type="button" onclick="getHelp('choking')">
+          <button class="action-card" type="button" onclick="window.open('emergency.html?type=choking', '_blank')">
             <span class="card-emoji">😮‍💨</span>
             <strong>Choking</strong>
             <p>Clear airways and get help quickly.</p>
           </button>
-          <button class="action-card" type="button" onclick="getHelp('faint')">
+          <button class="action-card" type="button" onclick="window.open('emergency.html?type=faint', '_blank')">
             <span class="card-emoji">😵</span>
             <strong>Fainted</strong>
             <p>Stabilize and monitor unconscious people.</p>
           </button>
-          <button class="action-card" type="button" onclick="getHelp('burn')">
+          <button class="action-card" type="button" onclick="window.open('emergency.html?type=burn', '_blank')">
             <span class="card-emoji">🔥</span>
             <strong>Burn</strong>
             <p>Cool and protect burn injuries safely.</p>
           </button>
-          <button class="action-card" type="button" onclick="getHelp('accident')">
+          <button class="action-card" type="button" onclick="window.open('emergency.html?type=accident', '_blank')">
             <span class="card-emoji">🚑</span>
             <strong>Accident</strong>
             <p>Manage trauma until help arrives.</p>
@@ -136,29 +136,6 @@
             <div class="step-badge">4</div>
             <h3>Get Assistance</h3>
             <p>Stay calm while help is on the way.</p>
-          </div>
-        </div>
-      </section>
-
-      <section class="section-block result-display" id="contact">
-        <div class="section-header">
-          <span class="section-label">Result Display</span>
-          <h2>Emergency guidance panel</h2>
-          <p>Detailed advice appears here once you choose an emergency action.</p>
-        </div>
-        <div class="result-card">
-          <div class="result-top">
-            <div>
-              <h3 id="detailHeading">Ready for your first aid action</h3>
-              <p class="result-sub">Select Bleeding, Choking, Fainted, Burn, or Accident above.</p>
-            </div>
-            <button class="btn btn-close" type="button" onclick="closeDetail()">Close</button>
-          </div>
-          <div id="detailContent" class="result-content">
-            <div class="result-placeholder">
-              <span class="placeholder-icon">📍</span>
-              <p>Choose an emergency to see step-by-step instructions and call information.</p>
-            </div>
           </div>
         </div>
       </section>
