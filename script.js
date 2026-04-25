@@ -110,6 +110,7 @@ function closeDetail() {
   const content = document.getElementById('detailContent');
   resultCard.classList.remove('active');
   content.classList.remove('active');
+  window.location.href = 'index.html';
 }
 
 function callService(name, number) {
