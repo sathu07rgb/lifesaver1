@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Emergency Response - LifeSaver AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="site-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">🚨</div>
+        <div>
+          <span class="brand-name">LifeSaver AI</span>
+          <span class="brand-tag">Emergency care dashboard</span>
+        </div>
+      </div>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="#first-aid">First Aid</a>
+        <a href="#hospitals">Hospitals</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <button class="btn btn-sos-nav" type="button" onclick="openSosModal()">SOS Call</button>
+    </header>
+
+    <main>
+      <section class="section-block quick-actions" id="first-aid">
+        <div class="section-header">
+          <span class="section-label">Emergency Response</span>
+          <h2>Immediate first aid actions</h2>
+          <p>Tap any situation below to get immediate first aid steps and emergency guidance.</p>
+        </div>
+        <div class="card-grid">
+          <button class="action-card" type="button" onclick="getHelp('bleeding')">
+            <span class="card-emoji">🩸</span>
+            <strong>Bleeding</strong>
+            <p>Fast first aid steps for severe bleeding.</p>
+          </button>
+          <button class="action-card" type="button" onclick="getHelp('choking')">
+            <span class="card-emoji">😮‍💨</span>
+            <strong>Choking</strong>
+            <p>Clear airways and get help quickly.</p>
+          </button>
+          <button class="action-card" type="button" onclick="getHelp('faint')">
+            <span class="card-emoji">😵</span>
+            <strong>Fainted</strong>
+            <p>Stabilize and monitor unconscious people.</p>
+          </button>
+          <button class="action-card" type="button" onclick="getHelp('burn')">
+            <span class="card-emoji">🔥</span>
+            <strong>Burn</strong>
+            <p>Cool and protect burn injuries safely.</p>
+          </button>
+          <button class="action-card" type="button" onclick="getHelp('accident')">
+            <span class="card-emoji">🚑</span>
+            <strong>Accident</strong>
+            <p>Manage trauma until help arrives.</p>
+          </button>
+        </div>
+      </section>
+
+      <section class="section-block result-display" id="contact">
+        <div class="section-header">
+          <span class="section-label">Result Display</span>
+          <h2>Emergency guidance panel</h2>
+          <p>Detailed advice appears here once you choose an emergency action.</p>
+        </div>
+        <div class="result-card">
+          <div class="result-top">
+            <div>
+              <h3 id="detailHeading">Ready for your first aid action</h3>
+              <p class="result-sub">Select Bleeding, Choking, Fainted, Burn, or Accident above.</p>
+            </div>
+            <button class="btn btn-close" type="button" onclick="closeDetail()">Close</button>
+          </div>
+          <div id="detailContent" class="result-content">
+            <div class="result-placeholder">
+              <span class="placeholder-icon">📍</span>
+              <p>Choose an emergency to see step-by-step instructions and call information.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-overlay" id="sosModal">
+    <div class="modal">
+      <div class="modal-title">🚨 SOS Activated</div>
+      <p class="modal-body">
+        This will alert <strong>all emergency services</strong> to your location.
+        Only proceed in a real emergency.
+      </p>
+      <div class="modal-actions">
+        <button class="modal-btn cancel" type="button" onclick="closeSosModal()">Cancel</button>
+        <button class="modal-btn confirm" type="button" onclick="confirmSos()">SEND SOS</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="script.js"></script>
+</body>
+</html>
