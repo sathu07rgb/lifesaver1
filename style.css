@@ -59,6 +59,8 @@ a {
   border-radius: 28px;
   backdrop-filter: blur(18px);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.22);
+  position: relative;
+  z-index: 100;
 }
 
 .brand {
@@ -96,6 +98,7 @@ a {
   gap: 24px;
   flex-wrap: wrap;
   align-items: center;
+  overflow: visible;
 }
 
 .nav-links a {
@@ -2032,4 +2035,171 @@ a {
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
   margin: 0 auto 1rem;
+}
+
+/* ─── Custom Language Dropdown (Premium) ──────────────────────────────────── */
+.custom-dropdown {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+  margin-left: 0.75rem;
+  overflow: visible;
+}
+
+/* Trigger button */
+.dropdown-btn {
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid #ff3b3b;
+  padding: 9px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 0.01em;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  box-shadow: 0 0 0 rgba(255, 59, 59, 0);
+}
+
+.dropdown-btn:hover,
+.dropdown-btn:focus,
+.custom-dropdown:hover .dropdown-btn {
+  background: rgba(255, 59, 59, 0.07);
+  box-shadow: 0 0 18px rgba(255, 59, 59, 0.35);
+  outline: none;
+}
+
+/* Animated caret */
+.dropdown-btn::after {
+  content: '▾';
+  font-size: 11px;
+  opacity: 0.6;
+  transition: transform 0.3s ease;
+}
+
+.custom-dropdown:hover .dropdown-btn::after {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+/* Menu panel */
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 185px;
+  background: rgba(14, 18, 27, 0.92);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 59, 59, 0.25);
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.65),
+    0 0 20px rgba(255, 59, 59, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  padding: 8px;
+  z-index: 9999;
+  /* Hidden state */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-8px) scale(0.97);
+  transition:
+    opacity 0.28s ease,
+    transform 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    visibility 0.28s ease;
+  /* Max height + scrollbar */
+  max-height: 380px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar */
+.dropdown-menu::-webkit-scrollbar {
+  width: 4px;
+}
+.dropdown-menu::-webkit-scrollbar-track {
+  background: transparent;
+}
+.dropdown-menu::-webkit-scrollbar-thumb {
+  background: rgba(255, 59, 59, 0.5);
+  border-radius: 10px;
+}
+.dropdown-menu::-webkit-scrollbar-thumb:hover {
+  background: #ff3b3b;
+}
+
+/* Show on hover (CSS) OR on .active class (JS click fallback) */
+.custom-dropdown:hover .dropdown-menu,
+.dropdown-menu.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+/* Divider between languages */
+.dropdown-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  margin: 6px 8px;
+}
+
+/* Each language item */
+.dropdown-item {
+  background: transparent;
+  color: #cbd5e1;
+  padding: 10px 12px;
+  border: none;
+  width: 100%;
+  text-align: left;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13.5px;
+  font-family: 'Poppins', sans-serif;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  gap: 6px;
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 59, 59, 0.12);
+  color: #ff6b6b;
+  transform: translateX(4px);
+}
+
+.dropdown-item:active {
+  transform: translateX(2px) scale(0.98);
+}
+
+/* Checkmark icon */
+.check-icon {
+  color: #ff3b3b;
+  font-size: 11px;
+  opacity: 0;
+  flex-shrink: 0;
+  transition: opacity 0.2s ease;
+}
+
+/* Selected / active state */
+.dropdown-item.selected {
+  background: rgba(255, 59, 59, 0.1);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.dropdown-item.selected .check-icon {
+  opacity: 1;
+}
+
+.dropdown-item.selected:hover {
+  background: rgba(255, 59, 59, 0.18);
 }

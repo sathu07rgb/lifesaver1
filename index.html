@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&family=Poppins:wght@400;500;600&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -25,11 +25,22 @@
       </div>
       <nav class="nav-links">
         <a href="#home" id="navHome">Home</a>
-        <select id="languageSelector" onchange="changeLanguage(this.value)" class="lang-select">
-          <option value="en">English</option>
-          <option value="hi">हिंदी</option>
-          <option value="kn">ಕನ್ನಡ</option>
-        </select>
+        <div class="custom-dropdown" id="customLangDropdown">
+          <button class="dropdown-btn" id="langDropdownBtn" onclick="toggleDropdown(event)">
+            <span class="globe-icon">🌐</span><span id="currentLangIcon">🇬🇧</span> <span id="currentLangText">English</span>
+          </button>
+          <div class="dropdown-menu" id="langDropdownMenu">
+            <button class="dropdown-item selected" id="lang-item-en" onclick="selectLanguage('en')"><span>🇬🇧 English</span> <span class="check-icon">✔</span></button>
+            <button class="dropdown-item" id="lang-item-hi" onclick="selectLanguage('hi')"><span>🇮🇳 हिंदी</span> <span class="check-icon">✔</span></button>
+            <button class="dropdown-item" id="lang-item-kn" onclick="selectLanguage('kn')"><span>🇮🇳 ಕನ್ನಡ</span> <span class="check-icon">✔</span></button>
+            <button class="dropdown-item" id="lang-item-ta" onclick="selectLanguage('ta')"><span>🇮🇳 தமிழ்</span> <span class="check-icon">✔</span></button>
+            <button class="dropdown-item" id="lang-item-te" onclick="selectLanguage('te')"><span>🇮🇳 తెలుగు</span> <span class="check-icon">✔</span></button>
+            <button class="dropdown-item" id="lang-item-ml" onclick="selectLanguage('ml')"><span>🇮🇳 മലയാളം</span> <span class="check-icon">✔</span></button>
+            <button class="dropdown-item" id="lang-item-es" onclick="selectLanguage('es')"><span>🇪🇸 Español</span> <span class="check-icon">✔</span></button>
+            <button class="dropdown-item" id="lang-item-fr" onclick="selectLanguage('fr')"><span>🇫🇷 Français</span> <span class="check-icon">✔</span></button>
+            <button class="dropdown-item" id="lang-item-ar" onclick="selectLanguage('ar')"><span>🇸🇦 العربية</span> <span class="check-icon">✔</span></button>
+          </div>
+        </div>
       </nav>
       <button class="btn btn-sos-nav" type="button" onclick="openSosModal()" id="navSosBtn">SOS Call</button>
     </header>

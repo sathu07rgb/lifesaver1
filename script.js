@@ -149,6 +149,48 @@ const translations = {
     sosSuccess: '🚨 ಎಸ್‌ಒಎಸ್ ಕಳುಹಿಸಲಾಗಿದೆ — ಸಹಾಯ ಮಾರ್ಗದಲ್ಲಿದೆ!',
     hospitalsMsg: '📍 ಹತ್ತಿರದ ಆಸ್ಪತ್ರೆ ತೆರೆಯುತ್ತಿದೆ',
     hospitalSearch: 'ನನ್ನ ಸಮೀಪದ ಆಸ್ಪತ್ರೆ'
+  },
+  ta: {
+    brandName: 'லைஃப்சேவர் AI',
+    brandTag: 'அவசர சிகிச்சை டேஷ்போர்டு',
+    navHome: 'முகப்பு',
+    navSosBtn: 'SOS அழைப்பு',
+    heroTitle: 'உடனடி உதவி. மிக முக்கியமான நேரத்தில்.'
+  },
+  te: {
+    brandName: 'లైఫ్సేవర్ AI',
+    brandTag: 'అత్యవసర సంరక్షణ డాష్‌బోర్డ్',
+    navHome: 'హోమ్',
+    navSosBtn: 'SOS కాల్',
+    heroTitle: 'వేగవంతమైన సహాయం. అత్యంత ముఖ్యమైన సమయంలో.'
+  },
+  ml: {
+    brandName: 'ലൈഫ്സേവർ AI',
+    brandTag: 'അടിയന്തര പരിചരണ ഡാഷ്‌ബോർഡ്',
+    navHome: 'ഹോം',
+    navSosBtn: 'SOS കോൾ',
+    heroTitle: 'വേഗത്തിലുള്ള സഹായം. ഏറ്റവും പ്രധാനപ്പെട്ട സമയത്ത്.'
+  },
+  es: {
+    brandName: 'Salvavidas AI',
+    brandTag: 'Panel de atención de emergencia',
+    navHome: 'Inicio',
+    navSosBtn: 'Llamada SOS',
+    heroTitle: 'Ayuda rápida. Cuando más importa.'
+  },
+  fr: {
+    brandName: 'Sauveteur AI',
+    brandTag: 'Tableau de bord des urgences',
+    navHome: 'Accueil',
+    navSosBtn: 'Appel SOS',
+    heroTitle: 'Aide rapide. Quand ça compte le plus.'
+  },
+  ar: {
+    brandName: 'منقذ الحياة AI',
+    brandTag: 'لوحة تحكم الرعاية الطارئة',
+    navHome: 'الرئيسية',
+    navSosBtn: 'نداء SOS',
+    heroTitle: 'مساعدة سريعة. عندما يكون الأمر أكثر أهمية.'
   }
 };
 
@@ -294,14 +336,87 @@ const firstAidData = {
 // Current language
 let currentLanguage = 'en';
 
+const languageDetails = {
+  'en': { icon: '🇬🇧', name: 'English' },
+  'hi': { icon: '🇮🇳', name: 'हिंदी' },
+  'kn': { icon: '🇮🇳', name: 'ಕನ್ನಡ' },
+  'ta': { icon: '🇮🇳', name: 'தமிழ்' },
+  'te': { icon: '🇮🇳', name: 'తెలుగు' },
+  'ml': { icon: '🇮🇳', name: 'മലയാളം' },
+  'es': { icon: '🇪🇸', name: 'Español' },
+  'fr': { icon: '🇫🇷', name: 'Français' },
+  'ar': { icon: '🇸🇦', name: 'العربية' }
+};
+
+// Dropdown Logic
+function toggleDropdown(event) {
+  if (event) event.stopPropagation();
+  const menu = document.getElementById('langDropdownMenu');
+  if (menu) menu.classList.toggle('active');
+}
+
+// Close dropdown when clicking outside
+window.addEventListener('click', function(e) {
+  const menu = document.getElementById('langDropdownMenu');
+  if (menu && menu.classList.contains('active') && !e.target.closest('.custom-dropdown')) {
+    menu.classList.remove('active');
+  }
+});
+
+function selectLanguage(lang) {
+  // Close menu
+  const menu = document.getElementById('langDropdownMenu');
+  if (menu) menu.classList.remove('active');
+  
+  // Update button text
+  const details = languageDetails[lang];
+  const iconEl = document.getElementById('currentLangIcon');
+  const textEl = document.getElementById('currentLangText');
+  if (iconEl && textEl && details) {
+    iconEl.textContent = details.icon;
+    textEl.textContent = details.name;
+  }
+  
+  // Update selected item (use 'selected' class not 'active' to avoid conflict with menu toggle)
+  document.querySelectorAll('.dropdown-item').forEach(item => {
+    item.classList.remove('selected');
+  });
+  const selectedItem = document.getElementById(`lang-item-${lang}`);
+  if (selectedItem) selectedItem.classList.add('selected');
+  
+  // Actually change language
+  changeLanguage(lang);
+}
+
 // Initialize language from localStorage
 function initializeLanguage() {
   const savedLanguage = localStorage.getItem('language') || 'en';
   currentLanguage = savedLanguage;
+  
+  // Fallback for old select if it exists
   const selector = document.getElementById('languageSelector');
   if (selector) {
     selector.value = currentLanguage;
   }
+  
+  // Initialize Custom Dropdown
+  const details = languageDetails[currentLanguage];
+  if (details) {
+    const iconEl = document.getElementById('currentLangIcon');
+    const textEl = document.getElementById('currentLangText');
+    if (iconEl && textEl) {
+      iconEl.textContent = details.icon;
+      textEl.textContent = details.name;
+    }
+    
+    // Set selected class (not 'active' to avoid conflict with menu show/hide)
+    const selectedItem = document.getElementById(`lang-item-${currentLanguage}`);
+    if (selectedItem) {
+      document.querySelectorAll('.dropdown-item').forEach(item => item.classList.remove('selected'));
+      selectedItem.classList.add('selected');
+    }
+  }
+
   applyTranslations();
 }
 
@@ -314,7 +429,8 @@ function changeLanguage(lang) {
 
 // Apply all translations to the page
 function applyTranslations() {
-  const langData = translations[currentLanguage];
+  const langData = translations[currentLanguage] || {};
+  const enData = translations['en'];
   
   const ids = [
     'brandName', 'brandTag', 'navHome', 'navFirstAid', 'navHospitals', 'navContact',
@@ -329,8 +445,12 @@ function applyTranslations() {
   
   ids.forEach(id => {
     const element = document.getElementById(id);
-    if (element && langData[id]) {
-      element.textContent = langData[id];
+    if (element) {
+      if (langData[id]) {
+        element.textContent = langData[id];
+      } else if (enData[id]) {
+        element.textContent = enData[id];
+      }
     }
   });
 }
@@ -495,12 +615,15 @@ function closeDetail() {
   resultCard.classList.remove('active');
   content.classList.remove('active');
   
+  const langData = translations[currentLanguage] || {};
+  const enData = translations['en'];
+
   // Restore placeholder content
-  heading.textContent = translations[currentLanguage].detailHeading;
+  heading.textContent = langData.detailHeading || enData.detailHeading;
   content.innerHTML = `
     <div class="result-placeholder">
       <span class="placeholder-icon">📍</span>
-      <p id="resultPlaceholder">${translations[currentLanguage].resultPlaceholder}</p>
+      <p id="resultPlaceholder">${langData.resultPlaceholder || enData.resultPlaceholder}</p>
     </div>
   `;
   
@@ -508,14 +631,15 @@ function closeDetail() {
 }
 
 function callService(serviceId, number) {
-  const langData = translations[currentLanguage];
+  const langData = translations[currentLanguage] || {};
+  const enData = translations['en'];
   const serviceMap = {
-    'ambulanceTitle': langData.ambulanceCall,
-    'policeTitle': langData.policeCall,
-    'fireTitle': langData.fireCall
+    'ambulanceTitle': langData.ambulanceCall || enData.ambulanceCall,
+    'policeTitle': langData.policeCall || enData.policeCall,
+    'fireTitle': langData.fireCall || enData.fireCall
   };
   
-  showToast(serviceMap[serviceId] || `📞 ${langData.callLabel} ${number}`);
+  showToast(serviceMap[serviceId] || `📞 ${langData.callLabel || enData.callLabel} ${number}`);
   window.location.href = `tel:${number}`;
 }
 
@@ -529,7 +653,9 @@ function closeSosModal() {
 
 function confirmSos() {
   closeSosModal();
-  showToast(translations[currentLanguage].sosSuccess);
+  const langData = translations[currentLanguage] || {};
+  const enData = translations['en'];
+  showToast(langData.sosSuccess || enData.sosSuccess);
   window.location.href = 'tel:112';
 }
 
